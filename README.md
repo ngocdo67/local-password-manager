@@ -11,3 +11,8 @@ or change any of the files in this repository.
 All files in this repository are a part of a graded assignment for CPSC310.
 The rules regarding academic honesty as outlined in the course syllabus apply
 to ALL files in this repository. 
+
+You must check in ALL files related to your project into the repository.
+Use the ‘code’ folder for your source code and related files.
+Use the ‘writing’ folder for any written material produced for the project 
+(the proposal, specs, final report, etc.).
