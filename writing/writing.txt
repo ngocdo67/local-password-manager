@@ -1,0 +1,3 @@
+Please keep all write-ups ((the proposal, specs, final report, etc.) 
+produced for the project here. Add new folders as needed.
+  
