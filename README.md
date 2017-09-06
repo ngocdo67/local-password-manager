@@ -3,7 +3,7 @@
 This repository is CPSC310 Group Project. 
 
 The only authorized users are Professor Ewa Syta and members of Group 2.
-	Do,Ngoc H.	Matz,Lucy I.	Parajuli,Kalyan R.	Tran,Ha	Wang,Shufan
+	Do,Ngoc H., ngoc.do@trincoll.edu	Matz,Lucy I., lucy.matz@trincoll.edu	Punyagupta,Phongpol, phongpol.punyagupta@trincoll.edu	Tran,Ha, ha.tran@trincoll.edu	Wang,Shufan, shufan.wang@trincoll.edu
 
 If you are not one of these people, you are not permitted to view, copy,
 or change any of the files in this repository. 
