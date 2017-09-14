@@ -41,3 +41,15 @@ I have verified that I have access to the Discussion Forum on Moodle. I have sha
 my availability with other group members. All group members decided on at least one
 time slot that works for everyone.”
 9/12/17, Soham Madnani
+
+“I have familiarized myself with the basic functionality of Git. I am able to add, modify,
+revert and remove files in the repository and I will continue learning about other
+features of Git. I will use the repository in a timely manner for all work completed as
+a part of the group project. That is, I will maintain a current copy of the repository by
+pulling it frequently as well as pushing any changes as soon as they are ready to be
+shared. I understand that the instructor has access to the complete history (log) of the
+repository and my individual contributions will be judged based on that log.
+I have verified that I have access to the Discussion Forum on Moodle. I have shared
+my availability with other group members. All group members decided on at least one
+time slot that works for everyone.”
+9/14/17, Ha Tran 
