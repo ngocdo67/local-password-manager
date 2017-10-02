@@ -6,7 +6,7 @@
  * @title       CS 310 Software Design Group Project
  * @Description This class is implements user account
  *              
- *
+ * test
  */
 public class Account {
 	private String user_ID, username, password, app_name;
