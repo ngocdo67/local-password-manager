@@ -74,13 +74,14 @@ public class User {
   *
   */
   public boolean verifyKeyPass(){
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     String verifyPassword = "";
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    System.out.println("Enter users password");
     try{
     verifyPassword = hash(in.readLine());
     }
     catch (IOException e){
-      System.out.println("Input Wrong");
+      System.out.println("Error reading in the password");
     }
     if (this.keyPass.equals(verifyPassword)) {
       return true;
