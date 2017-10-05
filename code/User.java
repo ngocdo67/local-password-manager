@@ -9,6 +9,8 @@
 import java.security.MessageDigest;
 import java.util.*;
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
+
 
 public class User {
   private String userID, keyPass;
@@ -27,6 +29,17 @@ public class User {
     this.keyPass = keyPass;
   }
 
+  public User(){
+
+  }
+
+  /**
+  * Hashes the user keyPass
+  *
+  * @param passwordToHash the keyPass that needs to be hashed
+  * @return hashPassword the hashed password
+  *
+  */
   public String hash(String passwordToHash){
     String hashPassword = null;
     try {
@@ -39,20 +52,36 @@ public class User {
       }
       hashPassword = sb.toString();
     }
-    catch (Exception e){
+    catch (NoSuchAlgorithmException |IOException e){
       e.printStackTrace();
     }
     return hashPassword;
   }
-
+  /**
+  * Sets a Users keyPass
+  *
+  * @param keyPass the desired keyPass
+  *
+  */
   public void setKeyPass(String keyPass){
 
     this.keyPass = hash(keyPass);
   }
-
-  public boolean verifyKeyPass() throws IOException{
+  /**
+  * Verifies a Users keyPass with the entered password
+  *
+  * @return true if password matches, false if it does not
+  *
+  */
+  public boolean verifyKeyPass(){
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    String verifyPassword = hash(in.readLine());
+    String verifyPassword = "";
+    try{
+    verifyPassword = hash(in.readLine());
+    }
+    catch (IOException e){
+      System.out.println("Input Wrong");
+    }
     if (this.keyPass.equals(verifyPassword)) {
       return true;
     }
