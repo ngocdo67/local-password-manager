@@ -1,14 +1,15 @@
 import java.util.*;
+import java.io.*;
 
 /**
- * @author      		Group 3
- * @instructor  		Prof Ewa Syta
- * @due_date				Oct 1, 2017
- * @title       		CS 310 Software Design Group Project
- * @Description 		Unit Test for account class
- *
- *
- */
+* @author      		Group 3
+* @instructor  		Prof Ewa Syta
+* @due_date				Oct 1, 2017
+* @title       		CS 310 Software Design Group Project
+* @Description 		Unit Test for account class
+*
+*
+*/
 
 public class AccountTester {
 	public static void main(String[] args) {
@@ -19,5 +20,10 @@ public class AccountTester {
 		System.out.println(acc2);
 		Account acc3 = new Account(0003, "Mike", "Mikepassword", "trinity.com");
 		System.out.println(acc3);
+
+		User soham = new User();
+		soham.setKeyPass("Sohampassword");
+		System.out.println(soham.verifyKeyPass());
+		
 	}
 }
