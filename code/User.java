@@ -11,11 +11,10 @@ import java.util.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 
-
 public class User {
   private String userID, keyPass;
   private Account account;
-  private Map<Integer, String> manager = new HashMap<Integer, String>();
+  private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
@@ -78,7 +77,7 @@ public class User {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Enter users password");
     try{
-    verifyPassword = hash(in.readLine());
+    	  verifyPassword = hash(in.readLine());
     }
     catch (IOException e){
       System.out.println("Error reading in the password");
@@ -89,5 +88,50 @@ public class User {
     else{
       return false;
     }
+  }
+  
+  /**
+   * This method adds an user's account to the inventory.
+   * 
+   * @param userName user name for the account
+   * @param password password of the account
+   * @param appName name of the application this account is used for
+   * @return boolean true if an account is successfully added, false if fails to add an account because an account already exists.
+   */
+  public boolean addAccount (String userName, String password, String appName) {
+	  int id = generateID ();
+	  for (Map.Entry<Integer, Account> account : manager.entrySet()) {
+		  if (account.getValue().getUsername().equals(userName) && account.getValue().getApp_name().equals(appName)) {
+			  System.out.println("Fail to add duplicate account");
+			  return false;
+		  }
+	  }
+	  manager.put(id, new Account(id, userName, password, appName));
+	  System.out.println("Added " + userName + " " + appName);
+	  return true;
+  }
+  
+  /**
+   * This method generates random id for the account.
+   * @return int a randomly generated id that is different from all ids of existing accounts.
+   */
+  private int generateID () {
+	  Random random = new Random ();
+	  if (manager.size() == 0) { //Generate the first id
+		  return random.nextInt(10);
+	  }
+	  int id;
+	  do { // Generate ids for manager with existing accounts
+		  id = random.nextInt(manager.size());
+	  } while (manager.containsKey(random.nextInt(manager.size())));
+	  return id;
+  }
+  /**
+   * This method displays all the existing accounts.
+   */
+  public void displayManager() {
+	  for (Map.Entry<Integer, Account> account : manager.entrySet()) {
+		  System.out.println("Key: " + account.getKey() + " Value: " + account.getValue());
+	  }
   }
 }

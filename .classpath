@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="code"/>
+	<classpathentry kind="lib" path="/Users/ngocdo67/Desktop/cpsc310/CPSC310-F17-Group3/code/commons-lang3-3.6.jar"/>
+	<classpathentry kind="lib" path="/Users/ngocdo67/Desktop/cpsc310/CPSC310-F17-Group3/code/commons-text-1.1.jar"/>
+	<classpathentry kind="output" path="code"/>
+</classpath>
