@@ -9,27 +9,9 @@ public class PasswordGenerator {
 	private static final int UPPER_CASE = 1;
 	private static final int NUMBER = 2;
 	private static final int SPECIAL_CHARACTER = 3;
-	private Map<Integer, RandomStringGenerator> randomStringGeneratorMapper;
 	
 	public PasswordGenerator() {
-		randomStringGeneratorMapper = new HashMap<Integer, RandomStringGenerator>();
-		try {
-			randomStringGeneratorMapper.put(LOWER_CASE, new RandomStringGenerator.Builder()
-			        .withinRange('a', 'z')
-			        .build());
-			randomStringGeneratorMapper.put(UPPER_CASE, new RandomStringGenerator.Builder()
-			        .withinRange('A', 'Z')
-			        .build());
-			randomStringGeneratorMapper.put(NUMBER, new RandomStringGenerator.Builder()
-			        .withinRange('0', '9')
-			        .build());
-			randomStringGeneratorMapper.put(SPECIAL_CHARACTER, new RandomStringGenerator.Builder()
-			        .withinRange('!', '/')
-			        .build());
-		}
-		catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
+
 	}
 	
 	public String executeDefault (int length) {
@@ -76,45 +58,23 @@ public class PasswordGenerator {
 		return lengths;
 	}
 	private String generateLowercase (int length) {
-		if (!randomStringGeneratorMapper.containsKey(LOWER_CASE)) {
-			System.out.println("Error for lower case");
-			return "";
-		}
-		RandomStringGenerator generator = randomStringGeneratorMapper.get(LOWER_CASE);
-		return generator.generate(length);
+		return generateSimplePassword (length, 'a', 'z');
 	}
 	private String generateUppercase (int length) {
-		if (!randomStringGeneratorMapper.containsKey(UPPER_CASE)) {
-			System.out.println("Error for upper case");
-			return "";
-		}
-		RandomStringGenerator generator = randomStringGeneratorMapper.get(UPPER_CASE);
-		return generator.generate(length);
+		return generateSimplePassword (length, 'A', 'Z');
 	}
 	
 	private String generateNumber (int length) {
-		if (!randomStringGeneratorMapper.containsKey(NUMBER)) {
-			System.out.println("Error for number");
-			return "";
-		}
-		RandomStringGenerator generator = randomStringGeneratorMapper.get(NUMBER);
-		return generator.generate(length);
+		return generateSimplePassword (length, '0', '9');
 	}
 	private String generateSpecialCharacter (int length) {
-		if (!randomStringGeneratorMapper.containsKey(SPECIAL_CHARACTER)) {
-			System.out.println("Error for number");
-			return "";
-		}
-		RandomStringGenerator generator = randomStringGeneratorMapper.get(SPECIAL_CHARACTER);
-		return generator.generate(length);
+		return generateSimplePassword (length, '!', '/');
 	}
 	private String generateSimplePassword (int length, char firstCharacter, char lastCharacter) {
 		String password = null;
 		try {
-			new RandomStringGenerator.Builder()
-			        .withinRange(firstCharacter, lastCharacter)
-			        .build()
-			        .generate(length);
+			RandomStringGenerator rsg = new RandomStringGenerator.Builder().withinRange(firstCharacter, lastCharacter).build();
+			password = rsg.generate(length);
 		}
 		catch (IllegalArgumentException e) {
 			e.printStackTrace();
