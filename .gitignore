@@ -1,5 +1,8 @@
-.DS_Storecode/Account.class
+.DS_Store
+code/Account.class
 code/*.class
 code/*.class
 code/User.class
 code/User.class
+.project
+.classpath
