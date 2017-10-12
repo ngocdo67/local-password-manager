@@ -10,12 +10,14 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class User {
   private String userID, keyPass;
   private Account account;
-  private Map<Integer, String> manager = new HashMap<Integer, String>();
+  private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
@@ -90,4 +92,58 @@ public class User {
       return false;
     }
   }
+
+  /**
+  * Retrieves account based on user_ID in manager.
+  *
+  * @param user_ID is the number within manager linked to the account we want
+  * @return account if it exists, or null if it does not
+  *
+  */
+  public Account getAccount(int user_ID){
+    return manager.get(user_ID);
+  }
+
+  /**
+  * Searches manager for account based on website.
+  *
+  * @param siteName is the website or application of the acount we are looking for
+  * @return account if found or null if not found
+  *
+  */
+  public Account search(String siteName) {
+    Iterator<Map.Entry<Integer,Account>> i=manager.entrySet().iterator();
+    while(i.hasNext()) {
+      Map.Entry<Integer,Account> a = i.next();
+      if(a.getValue().getApp_name().equalsIgnoreCase(siteName)) {
+        return a.getValue();
+      }
+    }
+    return null;
+  }
+
+  /**
+  * Modifies account within manager.
+  *
+  * @param siteName is the website or application of the acount we are modifying
+  * @return account if found or null if not found
+  *
+  */
+  public void modify(String siteName, int user_ID, String username, String password, String app_name) {
+    Account a = search(siteName);
+    if(a==null) {
+      System.out.println("No account found!");
+    }
+    else {
+      Account temp = manager.get(a.getUser_ID());
+      temp.setUser_ID(a.getUser_ID());
+      temp.setUsername(a.getUsername());
+      temp.setPassword(a.getPassword());
+      temp.setApp_name(a.getApp_name());
+      manager.put(a.getUser_ID(),temp);
+    }
+
+  }
+
+
 }
