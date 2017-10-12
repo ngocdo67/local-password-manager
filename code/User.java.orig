@@ -2,8 +2,6 @@
 /**
 * The User program creates a user for the application along with its username and password
 * @author      Group 3
-* @version 	1.0
-* @since 		2017-10-05
 * @version 	1.1
 * @since 		2017-10-12
 */
@@ -96,14 +94,15 @@ public class User {
   }
 
   /**
+<<<<<<< HEAD
   * Retrieves account based on user_ID in manager.
   *
   * @param user_ID is the number within manager linked to the account we want
   * @return account if it exists, or null if it does not
   *
   */
-  public Account getAccount(int userID){
-    return manager.get(userID);
+  public Account getAccount(int user_ID){
+    return manager.get(user_ID);
   }
 
 
@@ -121,7 +120,7 @@ public class User {
       Account a = manager.get(id);
       a.setUsername(userName);
       a.setPassword(password);
-      a.setAppname(appName);
+      a.setApp_name(appName);
       manager.put(id, a);
     }
     else {
@@ -131,8 +130,7 @@ public class User {
   }
 
 
-
-  /**
+=======
   * Gets the account from the manager hashmap and removes the account from the hashmap
   *
   * @param id: the unique id assigned to each account
@@ -140,10 +138,13 @@ public class User {
   *
   */
   public Account deleteAccount(int id) {
-    if (!manager.containsKey(id)) {
+    if (!manager.containskey(id)) {
       System.out.println("Error in deleting account: This id does not exist in the manager hashmap.");
       return null;
     }
-    return manager.remove(id);
+    Account acc = manager.get(id);
+    manager.remove(id);
+    return acc;
   }
+>>>>>>> added deleteAccount
 }

@@ -43,7 +43,7 @@ public class Account {
 	 *
 	 * @param entry is the new username.
 	 */
-	public void setUserName(String entry) {
+	public void setUsername(String entry) {
 		this.userName = entry;
 	}
 
@@ -52,7 +52,7 @@ public class Account {
 	 *
 	 * @param entry is the new password.
 	 */
-	public void setPassWord(String entry) {
+	public void setPassword(String entry) {
 		this.password = entry;
 	}
 
@@ -61,7 +61,7 @@ public class Account {
 	 *
 	 * @param entry is the new application.
 	 */
-	public void setAppName(String entry) {
+	public void setAppname(String entry) {
 		this.appName = entry;
 	}
 
@@ -80,7 +80,7 @@ public class Account {
 	 *
 	 * @return userName
 	 */
-	public String getUserName() {
+	public String getUsername() {
 		return this.userName;
 	}
 
@@ -89,7 +89,7 @@ public class Account {
 	 *
 	 * @return passWord
 	 */
-	public String getPassWord() {
+	public String getPassword() {
 		return this.password;
 	}
 
@@ -98,7 +98,7 @@ public class Account {
 	 *
 	 * @return appName
 	 */
-	public String getAppName() {
+	public String getAppname() {
 		return this.appName;
 	}
 
@@ -109,8 +109,8 @@ public class Account {
 	*/
 	public String toString(){
 		return ("This is the account for user ID: " + getUserID()
-			+ ", with username: " + getUserName() + ", password: " + getPassWord() +
-			" and for web/application: " + getAppName() + ".");
+			+ ", with username: " + getUsername() + ", password: " + getPassword() +
+			" and for web/application: " + getAppname() + ".");
 	}
 
 
