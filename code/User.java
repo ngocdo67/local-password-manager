@@ -4,6 +4,8 @@
 * @author      Group 3
 * @version 	1.0
 * @since 		2017-10-05
+* @version 	1.1
+* @since 		2017-10-12
 */
 
 import java.security.MessageDigest;
@@ -129,4 +131,21 @@ public class User {
   }
 
 
+
+  /**
+  * Gets the account from the manager hashmap and removes the account from the hashmap
+  *
+  * @param id: the unique id assigned to each account
+  * @return the account deleted, null if it does not exist
+  *
+  */
+  public Account deleteAccount(int id) {
+    if (!manager.containskey(id)) {
+      System.out.println("Error in deleting account: This id does not exist in the manager hashmap.");
+      return null;
+    }
+    Account acc = manager.get(id);
+    manager.remove(id);
+    return acc;
+  }
 }
