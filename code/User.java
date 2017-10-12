@@ -15,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
 public class User {
   private String userID, keyPass;
   private Account account;
-  private Map<Integer, String> manager = new HashMap<Integer, String>();
+  private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
@@ -89,5 +89,9 @@ public class User {
     else{
       return false;
     }
+  }
+
+  public boolean searchAccount(int id) {
+    return manager.containsKey(id);
   }
 }
