@@ -90,7 +90,13 @@ public class User {
       return false;
     }
   }
-
+  
+  /**
+  * Search for an account in the hashmap
+  *
+  * @return true if the account is in the hashmap, false otherwise
+  *
+  */
   public boolean searchAccount(int id) {
     return manager.containsKey(id);
   }
