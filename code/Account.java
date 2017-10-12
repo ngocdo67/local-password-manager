@@ -9,23 +9,23 @@
  *
  */
 public class Account {
-	private int user_ID;
-	private String username, password, app_name;
+	private int userID;
+	private String userName, passWord, appName;
 
 	// Constructors:
 	/**
 	 * Constructs a new account instance.
 	 *
-	 * @param user_ID			user ID
-	 * @param username		username
-	 * @param password    account password
-	 * @param app_name		name of application
+	 * @param userID			user ID
+	 * @param userName		username
+	 * @param passWord    account password
+	 * @param appName		name of application
 	 */
-	public Account(int user_ID, String username, String password, String app_name) {
-		this.user_ID = user_ID;
-		this.username = username;
-		this.password = password;
-		this.app_name = app_name;
+	public Account(int userID, String userName, String passWord, String appName) {
+		this.userID = userID;
+		this.userName = userName;
+		this.passWord = passWord;
+		this.appName = appName;
 	}
 
   // Setters:
@@ -34,8 +34,8 @@ public class Account {
 	 *
 	 * @param entry is the new user ID.
 	 */
-	public void setUser_ID(int entry) {
-		this.user_ID = entry;
+	public void setUserID(int entry) {
+		this.userID = entry;
 	}
 
 	/**
@@ -43,8 +43,8 @@ public class Account {
 	 *
 	 * @param entry is the new username.
 	 */
-	public void setUsername(String entry) {
-		this.username = entry;
+	public void setUserName(String entry) {
+		this.userName = entry;
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class Account {
 	 *
 	 * @param entry is the new password.
 	 */
-	public void setPassword(String entry) {
-		this.password = entry;
+	public void setPassWord(String entry) {
+		this.passWord = entry;
 	}
 
 	/**
@@ -61,45 +61,45 @@ public class Account {
 	 *
 	 * @param entry is the new application.
 	 */
-	public void setApp_name(String entry) {
-		this.app_name = entry;
+	public void setAppName(String entry) {
+		this.appName = entry;
 	}
 
 	// Getters:
 	/**
 	 * Returns account user ID.
 	 *
-	 * @return user_ID
+	 * @return userID
 	 */
-	public int getUser_ID() {
-		return this.user_ID;
+	public int getUserID() {
+		return this.userID;
 	}
 
 	/**
 	 * Returns account username.
 	 *
-	 * @return username
+	 * @return userName
 	 */
-	public String getUsername() {
-		return this.username;
+	public String getUserName() {
+		return this.userName;
 	}
 
 	/**
 	 * Returns account password.
 	 *
-	 * @return password
+	 * @return passWord
 	 */
-	public String getPassword() {
-		return this.password;
+	public String getPassWord() {
+		return this.passWord;
 	}
 
 	/**
 	 * Returns account application name.
 	 *
-	 * @return app_name
+	 * @return appName
 	 */
-	public String getApp_name() {
-		return this.app_name;
+	public String getAppName() {
+		return this.appName;
 	}
 
 	// toString
@@ -108,9 +108,9 @@ public class Account {
 	* @return toString of account object
 	*/
 	public String toString(){
-		return ("This is the account for user_ID: " + getUser_ID()
-			+ ", with username: " + getUsername() + ", password: " + getPassword() +
-			" and for web/application: " + getApp_name() + ".");
+		return ("This is the account for user ID: " + getUserID()
+			+ ", with username: " + getUserName() + ", password: " + getPassWord() +
+			" and for web/application: " + getAppName() + ".");
 	}
 
 

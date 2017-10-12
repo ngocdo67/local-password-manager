@@ -19,7 +19,7 @@ import java.util.Iterator;
 public class User {
   private String userID, keyPass;
   private Account account;
-  private Map<Integer, Account> manager = new HashMap<Integer, Account>();
+  private HashMap<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
@@ -140,7 +140,7 @@ public class User {
   *
   */
   public Account deleteAccount(int id) {
-    if (!manager.containskey(id)) {
+    if (!manager.containsKey(id)) {
       System.out.println("Error in deleting account: This id does not exist in the manager hashmap.");
       return null;
     }
