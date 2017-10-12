@@ -10,7 +10,7 @@
  */
 public class Account {
 	private int userID;
-	private String userName, passWord, appName;
+	private String userName, password, appName;
 
 	// Constructors:
 	/**
@@ -18,13 +18,13 @@ public class Account {
 	 *
 	 * @param userID			user ID
 	 * @param userName		username
-	 * @param passWord    account password
+	 * @param password    account password
 	 * @param appName		name of application
 	 */
-	public Account(int userID, String userName, String passWord, String appName) {
+	public Account(int userID, String userName, String password, String appName) {
 		this.userID = userID;
 		this.userName = userName;
-		this.passWord = passWord;
+		this.password = password;
 		this.appName = appName;
 	}
 
@@ -53,7 +53,7 @@ public class Account {
 	 * @param entry is the new password.
 	 */
 	public void setPassWord(String entry) {
-		this.passWord = entry;
+		this.password = entry;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class Account {
 	 * @return passWord
 	 */
 	public String getPassWord() {
-		return this.passWord;
+		return this.password;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class Account {
 
 	// toString
 	/**
-	* Creates toString.
+	* Creates toString
 	* @return toString of account object
 	*/
 	public String toString(){
