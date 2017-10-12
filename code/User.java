@@ -92,8 +92,9 @@ public class User {
   }
   
   /**
-  * Search for an account in the hashmap
+  * Search for an account in the hashmapp
   *
+  * @param id: the unique id assigned to each account
   * @return true if the account is in the hashmap, false otherwise
   *
   */
