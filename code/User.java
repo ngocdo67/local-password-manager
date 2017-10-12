@@ -104,43 +104,26 @@ public class User {
     return manager.get(user_ID);
   }
 
-  /**
-  * Searches manager for account based on website.
-  *
-  * @param siteName is the website or application of the acount we are looking for
-  * @return account if found or null if not found
-  *
-  */
-  public Account search(String siteName) {
-    Iterator<Map.Entry<Integer,Account>> i=manager.entrySet().iterator();
-    while(i.hasNext()) {
-      Map.Entry<Integer,Account> a = i.next();
-      if(a.getValue().getApp_name().equalsIgnoreCase(siteName)) {
-        return a.getValue();
-      }
-    }
-    return null;
-  }
 
   /**
   * Modifies account within manager.
   *
-  * @param siteName is the website or application of the acount we are modifying
-  * @return account if found or null if not found
+  * @param id is the ID number of the account we are modifying
+   * @param userName is the new username
+   * @param password is the new password
+   * @param appName is the new application or website name
   *
   */
-  public void modify(String siteName, int user_ID, String username, String password, String app_name) {
-    Account a = search(siteName);
-    if(a==null) {
-      System.out.println("No account found!");
+  public void modifyAccount (int id, String userName, String password, String appName) {
+    if(manager.containsKey(id)==true) {
+      Account a = manager.get(id);
+      a.setUsername(userName);
+      a.setPassword(password);
+      a.setApp_name(appName);
+      manager.put(id, a);
     }
     else {
-      Account temp = manager.get(a.getUser_ID());
-      temp.setUser_ID(a.getUser_ID());
-      temp.setUsername(a.getUsername());
-      temp.setPassword(a.getPassword());
-      temp.setApp_name(a.getApp_name());
-      manager.put(a.getUser_ID(),temp);
+      System.out.println("This ID does not exist!");
     }
 
   }
