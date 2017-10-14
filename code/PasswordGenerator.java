@@ -28,10 +28,10 @@ public class PasswordGenerator {
 	 * @param length the length of the password
 	 * @return String 	the new password.
 	 */
-	public String executeDefault (int length) {
+	public String executeDefault (int length) throws PasswordGeneratorException {
 		Random random = new Random();
 		if (length <= 8) {
-			System.out.println("Invalid length");
+			throw new PasswordGeneratorException ("Invalid length");
 		}
 		int[] lengths = buildLength(length);
 		StringBuilder originalPassword = appendSimplePasswords(length, lengths);
