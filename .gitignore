@@ -3,3 +3,4 @@ code/.DS_Store
 code/*.class
 .project
 .classpath
+/bin/
