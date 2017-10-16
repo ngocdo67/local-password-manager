@@ -9,23 +9,23 @@
  *
  */
 public class Account {
-	private int user_ID;
-	private String username, password, app_name;
+	private int userID;
+	private String userName, password, appName;
 
 	// Constructors:
 	/**
 	 * Constructs a new account instance.
 	 *
-	 * @param user_ID			user ID
-	 * @param username		username
+	 * @param userID			user ID
+	 * @param userName		username
 	 * @param password    account password
-	 * @param app_name		name of application
+	 * @param appName		name of application
 	 */
-	public Account(int user_ID, String username, String password, String app_name) {
-		this.user_ID = user_ID;
-		this.username = username;
+	public Account(int userID, String userName, String password, String appName) {
+		this.userID = userID;
+		this.userName = userName;
 		this.password = password;
-		this.app_name = app_name;
+		this.appName = appName;
 	}
 
   // Setters:
@@ -34,8 +34,8 @@ public class Account {
 	 *
 	 * @param entry is the new user ID.
 	 */
-	public void setUser_ID(int entry) {
-		this.user_ID = entry;
+	public void setUserID(int entry) {
+		this.userID = entry;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class Account {
 	 * @param entry is the new username.
 	 */
 	public void setUsername(String entry) {
-		this.username = entry;
+		this.userName = entry;
 	}
 
 	/**
@@ -61,33 +61,33 @@ public class Account {
 	 *
 	 * @param entry is the new application.
 	 */
-	public void setApp_name(String entry) {
-		this.app_name = entry;
+	public void setAppname(String entry) {
+		this.appName = entry;
 	}
 
 	// Getters:
 	/**
 	 * Returns account user ID.
 	 *
-	 * @return user_ID
+	 * @return userID
 	 */
-	public int getUser_ID() {
-		return this.user_ID;
+	public int getUserID() {
+		return this.userID;
 	}
 
 	/**
 	 * Returns account username.
 	 *
-	 * @return username
+	 * @return userName
 	 */
 	public String getUsername() {
-		return this.username;
+		return this.userName;
 	}
 
 	/**
 	 * Returns account password.
 	 *
-	 * @return password
+	 * @return passWord
 	 */
 	public String getPassword() {
 		return this.password;
@@ -96,21 +96,21 @@ public class Account {
 	/**
 	 * Returns account application name.
 	 *
-	 * @return app_name
+	 * @return appName
 	 */
-	public String getApp_name() {
-		return this.app_name;
+	public String getAppname() {
+		return this.appName;
 	}
 
 	// toString
 	/**
-	* Creates toString.
+	* Creates toString
 	* @return toString of account object
 	*/
 	public String toString(){
-		return ("This is the account for user_ID: " + getUser_ID()
+		return ("This is the account for user ID: " + getUserID()
 			+ ", with username: " + getUsername() + ", password: " + getPassword() +
-			" and for web/application: " + getApp_name() + ".");
+			" and for web/application: " + getAppname() + ".");
 	}
 
 
