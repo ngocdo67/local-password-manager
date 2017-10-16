@@ -95,7 +95,17 @@ public class User {
   }
   
   /**
-   * This method adds an user's account to the inventory.
+  * Search for an account in the hashmap
+  *
+  * @param id the unique id assigned to each account
+  * @return true if the account is in the hashmap, false otherwise
+  *
+  */
+  public boolean searchAccount(int id) {
+    return manager.containsKey(id);
+  }
+
+  /* This method adds an user's account to the inventory.
    * 
    * @param userName user name for the account
    * @param password password of the account

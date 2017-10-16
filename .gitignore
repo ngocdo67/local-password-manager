@@ -1,3 +1,6 @@
+/.project
+/.classpath
+/.*
 .DS_Store
 code/.DS_Store
 code/*.class
