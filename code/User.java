@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class User {
   private String userID, keyPass;
   private Account account;
-  private Map<Integer, Account> manager = new HashMap<Integer, Account>();
+  public Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
@@ -93,7 +93,7 @@ public class User {
       return false;
     }
   }
-  
+
   /**
   * Search for an account in the hashmap
   *
@@ -106,7 +106,7 @@ public class User {
   }
 
   /* This method adds an user's account to the inventory.
-   * 
+   *
    * @param userName user name for the account
    * @param password password of the account
    * @param appName name of the application this account is used for
@@ -124,7 +124,7 @@ public class User {
 	  System.out.println("Added " + userName + " " + appName);
 	  return true;
   }
-  
+
   /**
    * This method generates random id for the account.
    * @return int a randomly generated id that is different from all ids of existing accounts.
