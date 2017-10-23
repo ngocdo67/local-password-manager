@@ -49,8 +49,8 @@ public class LogIn {
 	  }
 	  
 	  /**
-	  * Verify the user log in password
-	  * @param passwordInput is the user's input for password to be verified
+	  * Verify the user name and log in password
+	  * @param 
 	  *
 	  */
 	  public boolean verifyNameAndPassword () {
