@@ -16,17 +16,36 @@ public class Account {
 	/**
 	 * Constructs a new account instance.
 	 *
-	 * @param userID			user ID
 	 * @param userName		username
 	 * @param password    account password
 	 * @param appName		name of application
 	 */
-	public Account(int userID, String userName, String password, String appName) {
-		this.userID = userID;
+	public Account(String userName, String password, String appName) {
 		this.userName = userName;
 		this.password = password;
 		this.appName = appName;
 	}
+
+	/**
+	 * Constructs a new account instance with generated password.
+	 *
+	 * @param userName		username
+	 * @param appName		name of application
+	 * @param ln 			length of password we are generating
+	 */
+	public Account(String userName, String appName, int ln) {
+		this.userName = userName;
+		this.appName = appName;
+		PasswordGenerator pg = new PasswordGenerator();
+		try {
+			String p = pg.executeDefault(ln);
+			password=p;
+		} catch (PasswordGeneratorException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
   // Setters:
 	/**
