@@ -12,60 +12,31 @@ import java.util.Map;
 
 public class LogIn {
 	  User user1;
-	  String userLogInInput;
-	  String passwordInput;
 	  
 	  /**
 	  * Construct a new LogIn instance
-	  * @param users is the current user information, stored as a hashmap<String, User>
+	  * @param users is the current user information
 	  *
 	  */
-	  public LogIn(String userLogInInput, String passwordInput) {
-		  this.user1 = new User(); // assume user has hardcoded user name and password
-	  }
-	  
-	  /**
-	  * Verify the user log in name
-	  * @param userLogInInput is the user's input for log in name to be verified
-	  *
-	  */
-	  public boolean verifyUserLogIn(String userLogInInput) {
-		  if ( user1.verifyLogInInput(userLogInInput) ) {
-			  return true;
-		  }
-		  return false;
-	  }
-	  
-	  /**
-	  * Verify the user log in password
-	  * @param passwordInput is the user's input for password to be verified
-	  *
-	  */
-	  public boolean verifyPassLogIn(String passwordInput) {
-		  if ( user1.verifyKeyPass(passwordInput)) {
-			  return true;
-		  }
-		  return false;
+	  public LogIn() {
+		  user1 = new User("Shufan", "CS310"); 
 	  }
 	  
 	  /**
 	  * Verify the user name and log in password
-	  * @param 
-	  *
+	  * @param userLogInInput is the user's input for log in name to be verified
+	  * @param passwordInput is the user's input for password to be verified
 	  */
-	  public boolean verifyNameAndPassword () {
-		  if (!verifyUserLogIn(userLogInInput)) {
+	  public boolean verifyNameAndPassword (String userLogInInput, String passwordInput) {
+		  if (!user1.verifyLogInInput(userLogInInput)) {
 			  System.out.println("Error! Wrong User Log In Name!");
 			  return false;
 		  }
 		  
-		  if (!verifyPassLogIn(passwordInput)) {
+		  if (!user1.verifyKeyPass(passwordInput)) {
 			  System.out.println("Error! Wrong password!");
 			  return false;
 		  }
 		  return true;
-	  }
-	  
-	  
-	  
+	  }  
 }
