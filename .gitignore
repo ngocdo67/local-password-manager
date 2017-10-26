@@ -7,3 +7,4 @@ code/*.class
 .project
 .classpath
 /bin/
+*.iml
