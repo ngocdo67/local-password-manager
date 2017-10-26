@@ -31,15 +31,15 @@ public class Account {
 	 *
 	 * @param userName		username
 	 * @param appName		name of application
-	 * @param ln 			length of password we are generating
+	 * @param passLength 			length of password we are generating
 	 */
-	public Account(String userName, String appName, int ln) {
+	public Account(String userName, String appName, int passLength) {
 		this.userName = userName;
 		this.appName = appName;
-		PasswordGenerator pg = new PasswordGenerator();
+		PasswordGenerator passwordGenerator = new PasswordGenerator();
 		try {
-			String p = pg.executeDefault(ln);
-			password=p;
+			String generatedPassword = passwordGenerator.executeDefault(passLength);
+			password=generatedPassword;
 		} catch (PasswordGeneratorException e) {
 			e.printStackTrace();
 		}
@@ -127,9 +127,8 @@ public class Account {
 	* @return toString of account object
 	*/
 	public String toString(){
-		return ("This is the account for user ID: " + getUserID()
-			+ ", with username: " + getUsername() + ", password: " + getPassword() +
-			" and for web/application: " + getAppname() + ".");
+		return ("This is the account for website/application: " + getAppname()
+			+ ", with username: " + getUsername() + " and password: "+getPassword());
 	}
 
 

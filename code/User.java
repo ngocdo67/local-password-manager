@@ -135,21 +135,16 @@ public class User {
 	  int id;
 	  do { // Generate ids for manager with existing accounts
 		  id = random.nextInt(manager.size());
-	  } while (manager.containsKey(random.nextInt(manager.size())));
+	  } while (manager.containsKey(id));
 	  return id;
   }
   /**
    * This method displays all the existing accounts.
    */
   public void displayManager() {
-      int i = 0;
-      Iterator<Map.Entry<Integer,Account>> it=manager.entrySet().iterator();
-      while(it.hasNext()) {
-          i++;
-          Map.Entry<Integer,Account> curr = it.next();
-		  System.out.println("Key: " + curr.getKey() + " Value: " + curr.getValue());
-	  }
-	  System.out.println(i);
+      for (Map.Entry<Integer, Account> account : manager.entrySet()) {
+          System.out.println("Key: " + account.getKey() + " Value: " + account.getValue());
+      }
   }
 
   /**

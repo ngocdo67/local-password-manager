@@ -18,7 +18,7 @@ public class AccountTester {
 		System.out.println(acc1);
 		Account acc2 = new Account("Soham", "Sohampassword", "trinity.com");
 		System.out.println(acc2);
-		Account acc3 = new Account("Mike", "Mikepassword", "trinity.com");
+		Account acc3 = new Account("Mike", "trinity.com", 12);
 		System.out.println(acc3);
 
 		User soham = new User();
