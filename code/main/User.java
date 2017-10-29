@@ -1,6 +1,6 @@
-
+package main;
 /**
-* The User program creates a user for the application along with its username and password
+* The main.User program creates a user for the application along with its username and password
 * @author      Group 3
 * @version 	1.0
 * @since 		2017-10-05
@@ -8,12 +8,13 @@
 * @since 		2017-10-12
 */
 
+import main.Account;
+
 import java.security.MessageDigest;
 import java.util.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class User {
   private String userID, keyPass;
@@ -21,7 +22,7 @@ public class User {
   private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
-  * Construct a new User instance
+  * Construct a new main.User instance
   *
   * @param userID is the username for the application
   * @param keyPass is the password for the application
@@ -137,7 +138,7 @@ public class User {
 	  int id;
 	  do { // Generate ids for manager with existing accounts
 		  id = random.nextInt(manager.size());
-	  } while (manager.containsKey(random.nextInt(manager.size())));
+	  } while (manager.containsKey(id));
 	  return id;
   }
   /**
@@ -147,13 +148,18 @@ public class User {
 	  for (Map.Entry<Integer, Account> account : manager.entrySet()) {
 		  System.out.println("Key: " + account.getKey() + " Value: " + account.getValue());
 	  }
+//	  Set<Integer> keySet = manager.keySet();
+//	  Iterator<Integer> keySetIterator = keySet.iterator();
+//	  while (keySetIterator.hasNext()) {
+//		  System.out.println ("1. Key: " + manager.get(keySetIterator.next()));
+//	  }
   }
 
   /**
   * Retrieves account based on user_ID in manager.
   *
   * @param user_ID is the number within manager linked to the account we want
-  * @return account if it exists, or null if it does not
+  * @return account if it exists, or null if it does not     
   *
   */
   public Account getAccount(int userID){

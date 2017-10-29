@@ -1,5 +1,5 @@
-/**
- * The PasswordGenerator class provides tools to generate passwords.
+package main; /**
+ * The main.PasswordGenerator class provides tools to generate passwords.
  * 
  * @author Group 3
  * @version 1.0
@@ -31,7 +31,7 @@ public class PasswordGenerator {
 	public String executeDefault (int length) throws PasswordGeneratorException {
 		Random random = new Random();
 		if (length <= 8) {
-			throw new PasswordGeneratorException ("Invalid length");
+			throw new PasswordGeneratorException("Invalid length");
 		}
 		int[] lengths = buildLength(length);
 		StringBuilder originalPassword = appendSimplePasswords(length, lengths);

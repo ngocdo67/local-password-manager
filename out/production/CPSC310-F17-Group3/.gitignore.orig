@@ -1,8 +1,10 @@
 /main.Account.class
 /test.AccountTester.class
 /main.User.class
-/main.User.class
+<<<<<<< HEAD
 /main.PasswordGenerator.class
 /test.PasswordGeneratorTester.class
 /CustomPredicate.class
 /test.UserTester.class
+=======
+>>>>>>> workingBranch
