@@ -14,11 +14,11 @@ import java.io.*;
 public class AccountTester {
 	public static void main(String[] args) {
 		System.out.println("Let's test the account class");
-		Account acc1 = new Account(0001, "Shufan", "shufanpassword", "trinity.com");
+		Account acc1 = new Account("Shufan", "shufanpassword", "trinity.com");
 		System.out.println(acc1);
-		Account acc2 = new Account(0002, "Soham", "Sohampassword", "trinity.com");
+		Account acc2 = new Account("Soham", "Sohampassword", "trinity.com");
 		System.out.println(acc2);
-		Account acc3 = new Account(0003, "Mike", "Mikepassword", "trinity.com");
+		Account acc3 = new Account("Mike", "trinity.com", 12);
 		System.out.println(acc3);
 
 		User soham = new User();

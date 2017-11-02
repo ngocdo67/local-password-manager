@@ -16,19 +16,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class User {
-  private String userID, keyPass;
+  private String userLogIn, keyPass;
   private Account account;
   private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
   /**
   * Construct a new User instance
   *
-  * @param userID is the username for the application
+  * @param userLogIn is the username for the application
   * @param keyPass is the password for the application
   *
   */
-  public User(String userID, String keyPass) {
-    this.userID = userID;
+  public User(String userLogIn, String keyPass) {
+    this.userLogIn = userLogIn;
     this.keyPass = keyPass;
   }
 
@@ -107,21 +107,19 @@ public class User {
 
   /* This method adds an user's account to the inventory.
    * 
-   * @param userName user name for the account
-   * @param password password of the account
-   * @param appName name of the application this account is used for
+   * @param newEntry is the account we are adding to the manager.
    * @return boolean true if an account is successfully added, false if fails to add an account because an account already exists.
    */
-  public boolean addAccount (String userName, String password, String appName) {
+  public boolean addAccount (Account newEntry) {
 	  int id = generateID ();
 	  for (Map.Entry<Integer, Account> account : manager.entrySet()) {
-		  if (account.getValue().getUsername().equals(userName) && account.getValue().getAppname().equals(appName)) {
+		  if (account.getValue().getUsername().equals(newEntry.getUsername()) && account.getValue().getAppname().equals(newEntry.getAppname())) {
 			  System.out.println("Fail to add duplicate account");
 			  return false;
 		  }
 	  }
-	  manager.put(id, new Account(id, userName, password, appName));
-	  System.out.println("Added " + userName + " " + appName);
+	  manager.put(id, newEntry);
+	  System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());
 	  return true;
   }
   
@@ -137,22 +135,22 @@ public class User {
 	  int id;
 	  do { // Generate ids for manager with existing accounts
 		  id = random.nextInt(manager.size());
-	  } while (manager.containsKey(random.nextInt(manager.size())));
+	  } while (manager.containsKey(id));
 	  return id;
   }
   /**
    * This method displays all the existing accounts.
    */
   public void displayManager() {
-	  for (Map.Entry<Integer, Account> account : manager.entrySet()) {
-		  System.out.println("Key: " + account.getKey() + " Value: " + account.getValue());
-	  }
+      for (Map.Entry<Integer, Account> account : manager.entrySet()) {
+          System.out.println("Key: " + account.getKey() + " Value: " + account.getValue());
+      }
   }
 
   /**
   * Retrieves account based on user_ID in manager.
   *
-  * @param user_ID is the number within manager linked to the account we want
+  * @param userID is the number within manager linked to the account we want
   * @return account if it exists, or null if it does not
   *
   */
@@ -165,18 +163,12 @@ public class User {
   * Modifies account within manager.
   *
   * @param id is the ID number of the account we are modifying
-   * @param userName is the new username
-   * @param password is the new password
-   * @param appName is the new application or website name
+   * @param newEntry is the new account
   *
   */
-  public void modifyAccount (int id, String userName, String password, String appName) {
-    if(manager.containsKey(id)==true) {
-      Account a = manager.get(id);
-      a.setUsername(userName);
-      a.setPassword(password);
-      a.setAppname(appName);
-      manager.put(id, a);
+  public void modifyAccount (int id, Account newEntry) {
+    if(manager.containsKey(id)) {
+      manager.put(id, newEntry);
     }
     else {
       System.out.println("This ID does not exist!");
@@ -200,4 +192,9 @@ public class User {
     }
     return manager.remove(id);
   }
+
+
+
+
+
 }

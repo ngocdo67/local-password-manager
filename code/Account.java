@@ -16,17 +16,36 @@ public class Account {
 	/**
 	 * Constructs a new account instance.
 	 *
-	 * @param userID			user ID
 	 * @param userName		username
 	 * @param password    account password
 	 * @param appName		name of application
 	 */
-	public Account(int userID, String userName, String password, String appName) {
-		this.userID = userID;
+	public Account(String userName, String password, String appName) {
 		this.userName = userName;
 		this.password = password;
 		this.appName = appName;
 	}
+
+	/**
+	 * Constructs a new account instance with generated password.
+	 *
+	 * @param userName		username
+	 * @param appName		name of application
+	 * @param passLength 			length of password we are generating
+	 */
+	public Account(String userName, String appName, int passLength) {
+		this.userName = userName;
+		this.appName = appName;
+		PasswordGenerator passwordGenerator = new PasswordGenerator();
+		try {
+			String generatedPassword = passwordGenerator.executeDefault(passLength);
+			password=generatedPassword;
+		} catch (PasswordGeneratorException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
   // Setters:
 	/**
@@ -108,9 +127,8 @@ public class Account {
 	* @return toString of account object
 	*/
 	public String toString(){
-		return ("This is the account for user ID: " + getUserID()
-			+ ", with username: " + getUsername() + ", password: " + getPassword() +
-			" and for web/application: " + getAppname() + ".");
+		return ("This is the account for website/application: " + getAppname()
+			+ ", with username: " + getUsername() + " and password: "+getPassword());
 	}
 
 
