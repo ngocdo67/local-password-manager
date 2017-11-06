@@ -76,7 +76,7 @@ public class User {
    * @return true if the log in name matches, false if it does not
    **/
   public boolean verifyLogInInput(String userLogInInput) {
-      if (this.userID == userLogInInput) {
+      if (this.userLogIn == userLogInInput) {
           return true;
       }
       return false;
