@@ -8,7 +8,7 @@
 
 public class LogInTester {
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
         LogIn logInTestCase = new LogIn();
         if (logInTestCase.verifyNameAndPassword("Shufan", "CS310")) {
