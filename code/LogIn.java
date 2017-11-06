@@ -27,7 +27,7 @@ public class LogIn {
 	  * @param userLogInInput is the user's input for log in name to be verified
 	  * @param passwordInput is the user's input for password to be verified
 	  */
-	  /*public boolean verifyNameAndPassword (String userLogInInput, String passwordInput) {
+	  public boolean verifyNameAndPassword (String userLogInInput, String passwordInput) {
 		  if (!user1.verifyLogInInput(userLogInInput)) {
 			  System.out.println("Error! Wrong User Log In Name!");
 			  return false;
@@ -38,5 +38,5 @@ public class LogIn {
 			  return false;
 		  }
 		  return true;
-	  }  */
+	  }
 }

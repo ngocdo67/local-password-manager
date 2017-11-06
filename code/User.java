@@ -71,22 +71,31 @@ public class User {
     this.keyPass = hash(keyPass);
   }
   /**
+   * * Verifies a Users log in name with the entered log in name
+   * @param userLogInInput: the user input log in, waiting to be verified
+   * @return true if the log in name matches, false if it does not
+   **/
+  public boolean verifyLogInInput(String userLogInInput) {
+      if (this.userLogIn == userLogInInput) {
+          return true;
+      }
+      return false;
+  }
+
+  /**
   * Verifies a Users keyPass with the entered password
-  *
+  * @param passwordInput: the user input password, waiting to be verified
   * @return true if password matches, false if it does not
   *
   */
-  public boolean verifyKeyPass(){
+  public boolean verifyKeyPass(String passwordInput){
     String verifyPassword = "";
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    System.out.println("Enter users password");
-    try{
-    	  verifyPassword = hash(in.readLine());
-    }
-    catch (IOException e){
-      System.out.println("Error reading in the password");
-    }
-    if (this.keyPass.equals(verifyPassword)) {
+    //System.out.println("Enter users password");
+
+    verifyPassword = hash(passwordInput);
+    //System.out.println(verifyPassword);
+    //if (this.keyPass.equals(verifyPassword)) {
+    if (hash(this.keyPass).equals(verifyPassword)) {
       return true;
     }
     else{
