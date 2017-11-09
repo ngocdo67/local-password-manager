@@ -1,7 +1,6 @@
 package test;
 
 import main.Account;
-import main.User;
 
 /**
 * @author      		Group 3
@@ -25,7 +24,7 @@ public class AccountTester {
 
 		User soham = new User();
 		soham.setKeyPass("Sohampassword");
-		System.out.println(soham.verifyKeyPass());
+		System.out.println(soham.verifyKeyPass("WrongPassWord"));
 
 	}
 }
