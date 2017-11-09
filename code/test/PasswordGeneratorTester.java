@@ -1,5 +1,11 @@
+package test;
+
+import main.BasicPasswordGenerator;
+import main.PasswordGenerator;
+import main.PasswordGeneratorException;
+
 /**
- * The PasswordGeneratorTester tests the methods of the PasswordGenerator class.
+ * The test.PasswordGeneratorTester tests the methods of the main.PasswordGenerator class.
  * 
  * @author Group 3
  * @version 1.0
@@ -7,7 +13,7 @@
  */
 public class PasswordGeneratorTester {
 	public static void main (String[] args) {
-		PasswordGenerator pg = new PasswordGenerator ();
+		PasswordGenerator pg = new BasicPasswordGenerator();
 		try {
 			String password = pg.executeDefault(20);
 			System.out.println ("Password: " + password);			

@@ -1,3 +1,8 @@
+package test;
+
+import main.AesCbcModeFileProtector;
+import main.FileProtector;
+
 public class AesCbcModeFileProtectorTester {
     public static void main(String[] args) {
         String plainText = "This is a test string";

@@ -1,4 +1,4 @@
-/**
+package main; /**
  * Source: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
  */
 
@@ -15,7 +15,7 @@ public class AesCbcModeFileProtector implements FileProtector {
     private byte[] iv = "SECRET_4SECRET_5".getBytes();
 
     public AesCbcModeFileProtector() {
-        PasswordGenerator randomStringGenerator = new PasswordGenerator();
+        PasswordGenerator randomStringGenerator = new BasicPasswordGenerator();
         try {
             key = randomStringGenerator.executeDefault(24);
             iv = randomStringGenerator.executeDefault(16).getBytes();

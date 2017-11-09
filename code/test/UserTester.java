@@ -1,3 +1,7 @@
+package test;
+
+import main.Account;
+import main.User;
 
 public class UserTester {
 	public static void main (String[] args) {

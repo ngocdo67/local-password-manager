@@ -1,5 +1,5 @@
-/**
- * The PasswordGenerator class provides tools to generate passwords.
+package main; /**
+ * The main.PasswordGenerator class provides tools to generate passwords.
  *
  * @author Group 3
  * @version 1.0
@@ -10,7 +10,7 @@ import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.*;
 
-public class BasicPasswordGenerator implements PasswordGenerator{
+public class BasicPasswordGenerator implements PasswordGenerator {
     private static final int LOWER_CASE = 0;
     private static final int UPPER_CASE = 1;
     private static final int NUMBER = 2;

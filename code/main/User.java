@@ -1,6 +1,6 @@
-
+package main;
 /**
- * The User program creates a user for the application along with its username and password
+ * The main.User program creates a user for the application along with its username and password
  *
  * @author Group 3
  * @version 1.0
@@ -9,12 +9,13 @@
  * @since 2017-10-12
  */
 
+import main.Account;
+
 import java.security.MessageDigest;
 import java.util.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class User {
     private String userLogIn, keyPass;
@@ -22,7 +23,7 @@ public class User {
     private Map<Integer, Account> manager = new HashMap<Integer, Account>();
 
     /**
-     * Construct a new User instance
+     * Construct a new main.User instance
      *
      * @param userLogIn is the username for the application
      * @param keyPass is the password for the application

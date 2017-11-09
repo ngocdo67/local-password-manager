@@ -1,8 +1,10 @@
+package main;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The LogIn class provides log in verification for the user
+ * The main.LogIn class provides log in verification for the user
  * 
  * @author Group 3
  * @version 1.0
@@ -14,7 +16,7 @@ public class LogIn {
 	  User user1;
 	  
 	  /**
-	  * Construct a new LogIn instance
+	  * Construct a new main.LogIn instance
 	  * @param users is the current user information
 	  *
 	  */
@@ -29,7 +31,7 @@ public class LogIn {
 	  */
 	  /*public boolean verifyNameAndPassword (String userLogInInput, String passwordInput) {
 		  if (!user1.verifyLogInInput(userLogInInput)) {
-			  System.out.println("Error! Wrong User Log In Name!");
+			  System.out.println("Error! Wrong main.User Log In Name!");
 			  return false;
 		  }
 		  

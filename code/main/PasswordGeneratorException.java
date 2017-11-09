@@ -1,5 +1,7 @@
+package main;
+
 /**
- * The PasswordGeneratorException class creates a custom exception.
+ * The main.PasswordGeneratorException class creates a custom exception.
  *
  * @author Group 3
  * @version 1.0

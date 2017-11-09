@@ -1,5 +1,7 @@
-import java.util.*;
-import java.io.*;
+package test;
+
+import main.Account;
+import main.User;
 
 /**
 * @author      		Group 3
