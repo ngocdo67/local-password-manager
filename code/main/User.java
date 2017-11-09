@@ -9,13 +9,14 @@ package main;
  * @since 2017-10-12
  */
 
-import main.Account;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
-import java.util.*;
-import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class User {
     private String userLogIn, keyPass;
@@ -26,8 +27,7 @@ public class User {
      * Construct a new main.User instance
      *
      * @param userLogIn is the username for the application
-     * @param keyPass is the password for the application
-     *
+     * @param keyPass   is the password for the application
      */
     public User(String userLogIn, String keyPass) {
         this.userLogIn = userLogIn;
@@ -43,7 +43,6 @@ public class User {
      *
      * @param passwordToHash the keyPass that needs to be hashed
      * @return hashPassword the hashed password
-     *
      */
     public String hash(String passwordToHash) {
         String hashPassword = null;
@@ -66,7 +65,6 @@ public class User {
      * Sets a Users keyPass
      *
      * @param keyPass the desired keyPass
-     *
      */
     public void setKeyPass(String keyPass) {
 
@@ -77,7 +75,6 @@ public class User {
      * Verifies a Users keyPass with the entered password
      *
      * @return true if password matches, false if it does not
-     *
      */
     public boolean verifyKeyPass() {
         String verifyPassword = "";
@@ -100,7 +97,6 @@ public class User {
      *
      * @param id the unique id assigned to each account
      * @return true if the account is in the hashmap, false otherwise
-     *
      */
     public boolean searchAccount(int id) {
         return manager.containsKey(id);
@@ -126,6 +122,7 @@ public class User {
 
     /**
      * This method generates random id for the account.
+     *
      * @return int a randomly generated id that is different from all ids of existing accounts.
      */
     private int generateID() {
@@ -154,7 +151,6 @@ public class User {
      *
      * @param userID is the number within manager linked to the account we want
      * @return account if it exists, or null if it does not
-     *
      */
     public Account getAccount(int userID) {
         return manager.get(userID);
@@ -164,9 +160,8 @@ public class User {
     /**
      * Modifies account within manager.
      *
-     * @param id is the ID number of the account we are modifying
+     * @param id       is the ID number of the account we are modifying
      * @param newEntry is the new account
-     *
      */
     public void modifyAccount(int id, Account newEntry) {
         if (manager.containsKey(id)) {
@@ -183,7 +178,6 @@ public class User {
      *
      * @param id: the unique id assigned to each account
      * @return the account deleted, null if it does not exist
-     *
      */
     public Account deleteAccount(int id) {
         if (!manager.containsKey(id)) {

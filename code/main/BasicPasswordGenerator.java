@@ -43,7 +43,7 @@ public class BasicPasswordGenerator implements PasswordGenerator {
     /**
      * This method appends strings of different types, e.g. uppercase, lowercase, to one initially empty string.
      *
-     * @param length length of the final string
+     * @param length  length of the final string
      * @param lengths an array that contains the length for each type in the final string
      * @return the string that contains different types of randomly generated string in order.
      */
@@ -59,8 +59,8 @@ public class BasicPasswordGenerator implements PasswordGenerator {
     /**
      * This method shuffles the ordered passwords after the appending process.
      *
-     * @param length the length of the password
-     * @param originalPassword    the original ordered password
+     * @param length           the length of the password
+     * @param originalPassword the original ordered password
      * @return the shuffled password.
      */
     private StringBuilder shuffleSimplePasswords(int length, StringBuilder originalPassword) {
