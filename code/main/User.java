@@ -17,7 +17,7 @@ import java.util.Random;
  * @since 2017-10-12
  */
 public class User {
-    private static final String FILE_NAME = "user.txt";
+    private static final String FILE_NAME = "code/resources/user.txt";
     private String userLogIn, keyPass;
     private HashMap<Integer, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;

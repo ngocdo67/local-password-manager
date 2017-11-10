@@ -28,7 +28,7 @@ public class UserFileConverterTester {
             System.out.println(account.toString());
         }
 
-        UserFileConverter userFileConverter = new UserFileConverter("TestUserFileConverter.txt");
+        UserFileConverter userFileConverter = new UserFileConverter("code/resources/TestUserFileConverter.txt");
         userFileConverter.serialize(encryptedAccounts);
 
         HashMap<Integer, EncryptedAccount> decryptedAccounts = userFileConverter.deserialize();
