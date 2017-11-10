@@ -1,17 +1,20 @@
 package main;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
+ * This class defines an account of an user
+ *
  * @author Group 3
  * @instructor Prof Ewa Syta
- * @date Oct 1, 2017
  * @title CS 310 Software Design Group Project
- * @Description This class is implements user account
+ * @since Oct 1, 2017
  */
 public class Account {
-    private int userID;
-    private String userName, password, appName;
-
-    // Constructors:
+    private String userName;
+    private String password;
+    private String appName;
 
     /**
      * Constructs a new account instance.
@@ -27,72 +30,34 @@ public class Account {
     }
 
     /**
+     * Constructor from an encrypted account.
+     *
+     * @param encryptedAccount an encrypted account.
+     */
+    public Account(EncryptedAccount encryptedAccount) {
+        FileProtector fileProtector = new AesCbcModeFileProtector();
+        this.userName = fileProtector.decrypt(encryptedAccount.getUsername());
+        this.password = fileProtector.decrypt(encryptedAccount.getPassword());
+        this.appName = fileProtector.decrypt(encryptedAccount.getAppname());
+    }
+
+    /**
      * Constructs a new account instance with generated password.
      *
      * @param userName   username
      * @param appName    name of application
      * @param passLength length of password we are generating
      */
-    public Account(String userName, String appName, int passLength) {
+    public Account(String userName, int passLength, String appName) {
         this.userName = userName;
         this.appName = appName;
         PasswordGenerator passwordGenerator = new BasicPasswordGenerator();
         try {
             password = passwordGenerator.executeDefault(passLength);
         } catch (PasswordGeneratorException e) {
-            e.printStackTrace();
+            Logger.getLogger(Account.class.getName()).log(Level.SEVERE, "Cannot create password: Length is too short", e);
         }
 
-    }
-
-
-    // Setters:
-
-    /**
-     * Sets account user ID.
-     *
-     * @param entry is the new user ID.
-     */
-    public void setUserID(int entry) {
-        this.userID = entry;
-    }
-
-    /**
-     * Sets account username.
-     *
-     * @param entry is the new username.
-     */
-    public void setUsername(String entry) {
-        this.userName = entry;
-    }
-
-    /**
-     * Sets account password.
-     *
-     * @param entry is the new password.
-     */
-    public void setPassword(String entry) {
-        this.password = entry;
-    }
-
-    /**
-     * Sets account application name.
-     *
-     * @param entry is the new application.
-     */
-    public void setAppname(String entry) {
-        this.appName = entry;
-    }
-
-    // Getters:
-
-    /**
-     * Returns account user ID.
-     *
-     * @return userID
-     */
-    public int getUserID() {
-        return this.userID;
     }
 
     /**
@@ -122,17 +87,13 @@ public class Account {
         return this.appName;
     }
 
-    // toString
-
     /**
      * Creates toString
      *
      * @return toString of account object
      */
     public String toString() {
-        return ("This is the account for website/application: " + getAppname()
-                + ", with username: " + getUsername() + " and password: " + getPassword());
+        return "Username: " + userName + ", password: " + password + ", application: " + appName;
     }
-
 
 }

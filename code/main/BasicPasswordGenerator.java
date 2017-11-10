@@ -1,15 +1,19 @@
-package main; /**
- * The main.PasswordGenerator class provides tools to generate passwords.
+package main;
+
+import org.apache.commons.text.RandomStringGenerator;
+
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+/**
+ * The PasswordGenerator class provides tools to generate passwords.
  *
  * @author Group 3
  * @version 1.0
  * @since 10-14-2017
  */
-
-import org.apache.commons.text.RandomStringGenerator;
-
-import java.util.*;
-
 public class BasicPasswordGenerator implements PasswordGenerator {
     private static final int LOWER_CASE = 0;
     private static final int UPPER_CASE = 1;
@@ -144,7 +148,7 @@ public class BasicPasswordGenerator implements PasswordGenerator {
      * @return String a password consisting of only special characters.
      */
     private String generateSpecialCharacter(int length) {
-        return generateSimplePassword(length, '!', '/');
+        return generateSimplePassword(length, '!', '+');
     }
 
     /**
@@ -159,7 +163,7 @@ public class BasicPasswordGenerator implements PasswordGenerator {
             RandomStringGenerator rsg = new RandomStringGenerator.Builder().withinRange(firstCharacter, lastCharacter).build();
             password = rsg.generate(length);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Logger.getLogger(BasicPasswordGenerator.class.getName()).log(Level.SEVERE, "Error generating the simple password", e);
         }
         return password;
     }

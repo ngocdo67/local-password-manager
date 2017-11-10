@@ -1,12 +1,4 @@
 package main;
-/**
- * This class defines encrypt and decrypt method for a file protector in AES algorithm with CBC mode in Bouncy Castle
- *
- * @author Group 3
- * @version 1.0
- * @since 11-09-2017
- * Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
- */
 
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.InvalidCipherTextException;
@@ -16,23 +8,25 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * This class defines encrypt and decrypt method for a file protector in AES algorithm with CBC mode in Bouncy Castle
+ *
+ * @author Group 3
+ * @version 1.0
+ * @since 11-09-2017
+ * Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
+ */
 public class AesCbcModeFileProtector implements FileProtector {
-    private static final int KEY_LENGTH = 24;
-    private static final int IV_LENGTH = 16;
     private String key = "SECRET_1SECRET_2SECRET_3";
     private byte[] iv = "SECRET_4SECRET_5".getBytes();
 
     /**
-     * Constructor that initializes a unique key and iv.
+     * Constructor.
      */
     public AesCbcModeFileProtector() {
-        PasswordGenerator randomStringGenerator = new BasicPasswordGenerator();
-        try {
-            key = randomStringGenerator.executeDefault(KEY_LENGTH);
-            iv = randomStringGenerator.executeDefault(IV_LENGTH).getBytes();
-        } catch (PasswordGeneratorException pge) {
-            pge.printStackTrace();
-        }
     }
 
     /**
@@ -42,11 +36,14 @@ public class AesCbcModeFileProtector implements FileProtector {
      * @return a byte array of the encrypted string.
      */
     public byte[] encrypt(String plainText) {
+        if (plainText == null) {
+            return null;
+        }
         byte[] encrypted = null;
         try {
             encrypted = encrypt(plainText.getBytes(), key.getBytes(), iv);
         } catch (InvalidCipherTextException e) {
-            e.printStackTrace();
+            Logger.getLogger(AesCbcModeFileProtector.class.getName()).log(Level.SEVERE, "The cipher is invalid", e);
         }
         return encrypted;
     }
@@ -58,24 +55,27 @@ public class AesCbcModeFileProtector implements FileProtector {
      * @return decrypted text in string.
      */
     public String decrypt(byte[] encrypted) {
+        if (encrypted == null) {
+            return null;
+        }
         byte[] decrypted = null;
         try {
             decrypted = decrypt(encrypted, key.getBytes(), iv);
         } catch (InvalidCipherTextException e) {
-            e.printStackTrace();
+            Logger.getLogger(AesCbcModeFileProtector.class.getName()).log(Level.SEVERE, "The cipher is invalid", e);
         }
         return decrypted == null ? null : new String(decrypted);
     }
 
     /**
      * This decrypts a byte array of cipher using AES, CBC mode of bouncy castle.
+     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      *
      * @param cipher encrypted byte array
      * @param key    key
      * @param iv     initialization vector
      * @return decrypted byte array
      * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     *                                    Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      */
     private byte[] decrypt(byte[] cipher, byte[] key, byte[] iv) throws InvalidCipherTextException {
         PaddedBufferedBlockCipher aes = new PaddedBufferedBlockCipher(new CBCBlockCipher(
@@ -87,13 +87,13 @@ public class AesCbcModeFileProtector implements FileProtector {
 
     /**
      * This encrypts a byte array of plain text using AES, CBC mode of bouncy castle.
+     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      *
      * @param plain encrypted byte array
      * @param key   key
      * @param iv    initialization vector
      * @return encrypted byte array
      * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     *                                    Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      */
     private byte[] encrypt(byte[] plain, byte[] key, byte[] iv) throws InvalidCipherTextException {
         PaddedBufferedBlockCipher aes = new PaddedBufferedBlockCipher(new CBCBlockCipher(
@@ -105,12 +105,12 @@ public class AesCbcModeFileProtector implements FileProtector {
 
     /**
      * This encrypts or decrypts a byte array
+     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      *
      * @param cipher the type of cipher used
      * @param data   data in byte array
      * @return an encrypted or decrypted byte array
      * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     *                                    Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
      */
     private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws InvalidCipherTextException {
         int minSize = cipher.getOutputSize(data.length);
