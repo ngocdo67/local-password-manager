@@ -1,3 +1,7 @@
+package test;
+
+import main.LogIn;
+
 /**
  * The class tests the log in class
  *
