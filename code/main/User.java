@@ -1,6 +1,9 @@
 package main;
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The main.User program creates a user for the application along with its username and password
@@ -20,7 +25,7 @@ import java.util.Random;
 public class User {
     private static final String FILE_NAME = "code/resources/user.txt";
     private String userLogIn, keyPass;
-    private Map<Integer, EncryptedAccount> manager = new HashMap<>();
+    private HashMap<Integer, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
 
     /**
@@ -33,10 +38,16 @@ public class User {
         this.userLogIn = userLogIn;
         this.keyPass = keyPass;
         userFileConverter = new UserFileConverter(FILE_NAME);
-        if (userFileConverter.doesFileExist()) {
-            Map<Integer, EncryptedAccount> original = userFileConverter.deserialize();
-            manager = original == null ? new HashMap<>() : original;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
+            if (userFileConverter.doesFileExist() && br.readLine() != null) {
+                HashMap<Integer, EncryptedAccount> original = userFileConverter.deserialize();
+                manager = original == null ? new HashMap<>() : original;
+            }
+        } catch (IOException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading file", e);
         }
+
     }
 
     /**
@@ -109,7 +120,7 @@ public class User {
     public boolean addAccount(Account newEntry) {
         int id = generateID();
         EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry);
-        for (Map.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
+        for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
             if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
                 return false;
             }
@@ -138,7 +149,7 @@ public class User {
      * This method displays all the existing accounts.
      */
     public void displayManager() {
-        for (Map.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
+        for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
             System.out.println("Key: " + account.getKey() + " Value: " + new Account(account.getValue()));
         }
     }

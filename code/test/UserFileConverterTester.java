@@ -18,7 +18,7 @@ public class UserFileConverterTester {
         EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"));
         EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"));
         EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"));
-        Map<Integer, EncryptedAccount> encryptedAccounts = new HashMap<>();
+        HashMap<Integer, EncryptedAccount> encryptedAccounts = new HashMap<>();
         encryptedAccounts.put (1, account1);
         encryptedAccounts.put (2, account2);
         encryptedAccounts.put (3, account3);
