@@ -12,21 +12,6 @@ import java.io.Serializable;
 public class EncryptedAccount implements Serializable {
     private byte[] userName, password, appName;
 
-    // Constructors:
-
-    /**
-     * Constructs a new encrypted account instance.
-     *
-     * @param userName username
-     * @param password account password
-     * @param appName  name of application
-     */
-    public EncryptedAccount(byte[] userName, byte[] password, byte[] appName) {
-        this.userName = userName;
-        this.password = password;
-        this.appName = appName;
-    }
-
     /**
      * Constructs a new encrypted account instance.
      *

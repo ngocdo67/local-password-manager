@@ -9,7 +9,7 @@ package main;
  */
 
 public class LogIn {
-    User user1;
+    private User user1;
 
     /**
      * Construct a new main.LogIn instance

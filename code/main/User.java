@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Random;
 public class User {
     private static final String FILE_NAME = "code/resources/user.txt";
     private String userLogIn, keyPass;
-    private HashMap<Integer, EncryptedAccount> manager = new HashMap<>();
+    private Map<Integer, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
 
     /**
@@ -33,7 +34,7 @@ public class User {
         this.keyPass = keyPass;
         userFileConverter = new UserFileConverter(FILE_NAME);
         if (userFileConverter.doesFileExist()) {
-            HashMap<Integer, EncryptedAccount> original = userFileConverter.deserialize();
+            Map<Integer, EncryptedAccount> original = userFileConverter.deserialize();
             manager = original == null ? new HashMap<>() : original;
         }
     }
@@ -108,7 +109,7 @@ public class User {
     public boolean addAccount(Account newEntry) {
         int id = generateID();
         EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry);
-        for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
+        for (Map.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
             if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
                 return false;
             }
@@ -137,7 +138,7 @@ public class User {
      * This method displays all the existing accounts.
      */
     public void displayManager() {
-        for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
+        for (Map.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
             System.out.println("Key: " + account.getKey() + " Value: " + new Account(account.getValue()));
         }
     }

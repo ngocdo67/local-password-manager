@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +51,7 @@ public class UserFileConverter {
      * Source: https://www.tutorialspoint.com/java/java_serialization.htm
      * @param encryptedAccounts hash map of encrypted accounts
      */
-    public void serialize (HashMap<Integer, EncryptedAccount> encryptedAccounts) {
+    public void serialize (Map<Integer, EncryptedAccount> encryptedAccounts) {
         try {
             FileOutputStream fileOut =
                     new FileOutputStream(fileName, false);
@@ -68,8 +69,8 @@ public class UserFileConverter {
      * Source: https://www.tutorialspoint.com/java/java_serialization.htm
      * @return HashMap hash map of encrypted accounts
      */
-    public HashMap<Integer, EncryptedAccount> deserialize () {
-        HashMap<Integer, EncryptedAccount> accounts = null;
+    public Map<Integer, EncryptedAccount> deserialize () {
+        Map<Integer, EncryptedAccount> accounts = null;
         try {
             FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);

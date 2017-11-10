@@ -5,6 +5,7 @@ import main.EncryptedAccount;
 import main.UserFileConverter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class tests the UserFileConverter.
@@ -17,7 +18,7 @@ public class UserFileConverterTester {
         EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"));
         EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"));
         EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"));
-        HashMap<Integer, EncryptedAccount> encryptedAccounts = new HashMap<>();
+        Map<Integer, EncryptedAccount> encryptedAccounts = new HashMap<>();
         encryptedAccounts.put (1, account1);
         encryptedAccounts.put (2, account2);
         encryptedAccounts.put (3, account3);
@@ -31,7 +32,8 @@ public class UserFileConverterTester {
         UserFileConverter userFileConverter = new UserFileConverter("code/resources/TestUserFileConverter.txt");
         userFileConverter.serialize(encryptedAccounts);
 
-        HashMap<Integer, EncryptedAccount> decryptedAccounts = userFileConverter.deserialize();
+
+        Map<Integer, EncryptedAccount> decryptedAccounts = userFileConverter.deserialize();
         System.out.println ("---Map to deserialize from the file---");
         for (EncryptedAccount encryptedAccount : decryptedAccounts.values()) {
             Account account = new Account(encryptedAccount);
