@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @since 2017-10-12
  */
 public class User {
-    private static final String FILE_NAME = "/Users/ha/Documents/cs310/CPSC310-F17-Group3/code/resources/user.txt";
+    private static final String FILE_NAME = "code/resources/user.txt";
     private String userLogIn, keyPass;
     private HashMap<Integer, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
