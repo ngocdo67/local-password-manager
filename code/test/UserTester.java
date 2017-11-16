@@ -49,7 +49,7 @@ public class UserTester {
      */
     private static void testGetAccount (User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
-        Account account = user.getAccount(0);
+        Account account = user.getAccount(1);
         System.out.println("Retrieved account: " + account.toString());
     }
     /**

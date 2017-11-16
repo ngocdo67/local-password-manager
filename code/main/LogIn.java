@@ -15,7 +15,7 @@ public class LogIn {
      * Construct a new main.LogIn instance
      */
     public LogIn() {
-        user1 = new User("Shufan", "CS310");
+        user1 = new User("Group3", "CS310");
     }
 
     /**

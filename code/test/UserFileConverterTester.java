@@ -29,7 +29,7 @@ public class UserFileConverterTester {
             System.out.println(account.toString());
         }
 
-        UserFileConverter userFileConverter = new UserFileConverter("code/resources/TestUserFileConverter.txt");
+        UserFileConverter userFileConverter = new UserFileConverter("/Users/ha/Documents/cs310/CPSC310-F17-Group3/code/resources/user.txt");
         userFileConverter.serialize(encryptedAccounts);
 
 
