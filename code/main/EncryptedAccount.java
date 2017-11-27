@@ -17,8 +17,8 @@ public class EncryptedAccount implements Serializable {
      *
      * @param account a plain account.
      */
-    public EncryptedAccount(Account account) {
-        FileProtector fileProtector = new AesCbcModeFileProtector();
+    public EncryptedAccount(Account account, String keyPass) {
+        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
         this.userName = fileProtector.encrypt(account.getUsername());
         this.password = fileProtector.encrypt(account.getPassword());
         this.appName = fileProtector.encrypt(account.getAppname());

@@ -34,8 +34,8 @@ public class Account {
      *
      * @param encryptedAccount an encrypted account.
      */
-    public Account(EncryptedAccount encryptedAccount) {
-        FileProtector fileProtector = new AesCbcModeFileProtector();
+    public Account(EncryptedAccount encryptedAccount, String keyPass) {
+        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
         this.userName = fileProtector.decrypt(encryptedAccount.getUsername());
         this.password = fileProtector.decrypt(encryptedAccount.getPassword());
         this.appName = fileProtector.decrypt(encryptedAccount.getAppname());

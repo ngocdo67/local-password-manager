@@ -1,10 +1,7 @@
 package main;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -29,14 +26,16 @@ public class User {
     private UserFileConverter userFileConverter;
 
     /**
-     * Construct a new main.User instance
+     * Construct a new user instance
      *
      * @param userLogIn is the username for the application
      * @param keyPass   is the password for the application
      */
     public User(String userLogIn, String keyPass) {
         this.userLogIn = userLogIn;
-        this.keyPass = keyPass;
+        this.keyPass = hash(keyPass);
+
+        writeLoginFile();
         userFileConverter = new UserFileConverter(FILE_NAME);
         try {
             BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
@@ -50,13 +49,34 @@ public class User {
 
     }
 
-    /**
-     * Empty constructor.
-     */
     public User() {
-
+        readLoginFile();
     }
 
+    private void writeLoginFile () {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("code/resources/login.txt"));
+            writer.write(userLogIn + "\n");
+            writer.write(hash(keyPass));
+            writer.close();
+        } catch (IOException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error writing user log in to file", e);
+        }
+    }
+
+    private void readLoginFile () {
+        try (BufferedReader br = new BufferedReader(new FileReader("code/resources/login.txt"))) {
+            String line;
+            if ((line = br.readLine()) != null) {
+                this.userLogIn = line;
+            }
+            if ((line = br.readLine()) != null) {
+                this.keyPass = line;
+            }
+        } catch (IOException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
+        }
+    }
     /**
      * Hashes the user keyPass
      *
@@ -74,6 +94,7 @@ public class User {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             hashPassword = sb.toString();
+//            System.out.println("Hashed: " + hashPassword);
         } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +107,6 @@ public class User {
      * @param keyPass the desired keyPass
      */
     public void setKeyPass(String keyPass) {
-
         this.keyPass = hash(keyPass);
     }
 
@@ -119,7 +139,7 @@ public class User {
      */
     public boolean addAccount(Account newEntry) {
         int id = generateID();
-        EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry);
+        EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry, keyPass);
         for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
             if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
                 return false;
@@ -150,7 +170,7 @@ public class User {
      */
     public void displayManager() {
         for (HashMap.Entry<Integer, EncryptedAccount> account : manager.entrySet()) {
-            System.out.println("Key: " + account.getKey() + " Value: " + new Account(account.getValue()));
+            System.out.println("Key: " + account.getKey() + " Value: " + new Account(account.getValue(), keyPass));
         }
     }
 
@@ -161,7 +181,7 @@ public class User {
      * @return account if it exists, or null if it does not
      */
     public Account getAccount(int userID) {
-        return new Account(manager.get(userID));
+        return new Account(manager.get(userID), keyPass);
     }
 
 
@@ -173,7 +193,7 @@ public class User {
      */
     public void modifyAccount(int id, Account newEntry) {
         if (manager.containsKey(id)) {
-            manager.put(id, new EncryptedAccount(newEntry));
+            manager.put(id, new EncryptedAccount(newEntry, keyPass));
             userFileConverter.serialize(manager);
         } else {
             System.out.println("This ID does not exist!");
@@ -194,6 +214,6 @@ public class User {
             return null;
         }
         userFileConverter.serialize(manager);
-        return new Account(manager.remove(id));
+        return new Account(manager.remove(id), keyPass);
     }
 }
