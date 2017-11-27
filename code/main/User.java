@@ -154,6 +154,9 @@ public class User {
         }
     }
 
+    public HashMap getHashMap() {
+        return manager;
+    }
     /**
      * Retrieves account based on user_ID in manager.
      *
