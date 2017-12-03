@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 
 public class SceneAccountGUI extends Application {
-	User user = new User("a", "b");
+	User user = new User("User", "Password");
     Stage theStage;
     Scene scene;
     SplitPane root;
@@ -76,7 +76,7 @@ public class SceneAccountGUI extends Application {
         right.getChildren().addAll(tvAccount);
 
         user.getHashMap().forEach((key, value) -> {
-            Account account = new Account ((EncryptedAccount)value);
+            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
             accountList.add(account);
         });
 
