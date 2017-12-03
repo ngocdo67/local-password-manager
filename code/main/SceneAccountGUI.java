@@ -8,11 +8,14 @@ package main;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -22,7 +25,8 @@ public class SceneAccountGUI extends Application {
     Stage theStage;
     Scene scene;
     SplitPane root;
-    ObservableList<Account> accountList = FXCollections.observableArrayList();; 
+    ObservableList<Account> accountList = FXCollections.observableArrayList();
+    EventHandler<MouseEvent> clickHandler;
     
     @Override
     public void start(Stage primaryStage) {
@@ -40,6 +44,9 @@ public class SceneAccountGUI extends Application {
         Button addButton = new Button("Add account");
         addButton.setPrefSize(100, 20);
 
+        Button deleteButton = new Button("Delete account");
+        deleteButton.setPrefSize(100, 20);
+
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
 
@@ -52,7 +59,7 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
         vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(userName, userTextField, password, pwBox, appName, appTextField, addButton);
+        vbox.getChildren().addAll(userName, userTextField, password, pwBox, appName, appTextField, addButton, deleteButton);
 
         left.getChildren().addAll(vbox);
 
@@ -91,13 +98,10 @@ public class SceneAccountGUI extends Application {
             if (user.addAccount(acc))
                 accountList.add(acc);
         });
+
+        deleteButton.setOnAction(event ->
+        {
+        });
     }
 
-   /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-}
+

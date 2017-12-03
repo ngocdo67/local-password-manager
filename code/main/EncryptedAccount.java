@@ -22,6 +22,7 @@ public class EncryptedAccount implements Serializable {
         this.userName = fileProtector.encrypt(account.getUsername());
         this.password = fileProtector.encrypt(account.getPassword());
         this.appName = fileProtector.encrypt(account.getAppname());
+
     }
 
 
