@@ -34,11 +34,16 @@ public class SceneAccountGUI extends Application {
         root.setDividerPosition(0, 0.45);
 
         right.setSpacing(5);
-        right.setPadding(new Insets(10, 0, 0, 10));
+        right.setPadding(new Insets(10, 10, 10, 10));
+        left.setSpacing(5);
+        left.setPadding(new Insets(10, 10, 10, 10));
         scene = new Scene(root, 800, 800);
 
         Button addButton = new Button("Add account");
-        addButton.setPrefSize(100, 20);
+        addButton.setPrefSize(200, 20);
+
+        Button modifyButton = new Button("Modify account");
+        modifyButton.setPrefSize(200, 20);
 
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
@@ -52,7 +57,7 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
         vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(userName, userTextField, password, pwBox, appName, appTextField, addButton);
+        vbox.getChildren().addAll(userName, userTextField, password, pwBox, appName, appTextField, addButton, modifyButton);
 
         left.getChildren().addAll(vbox);
 
@@ -91,6 +96,12 @@ public class SceneAccountGUI extends Application {
             if (user.addAccount(acc))
                 accountList.add(acc);
         });
+
+//        modifyButton.setOnAction(event ->
+//        {
+//            Account acc = new Account (userTextField.getText(), pwBox.getText(), appTextField.getText());
+
+//        });
     }
 
    /**
