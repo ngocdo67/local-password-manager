@@ -8,6 +8,15 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +36,14 @@ public class AesCbcModeFileProtector implements FileProtector {
      * Constructor.
      */
     public AesCbcModeFileProtector() {
+    }
+
+    public AesCbcModeFileProtector(String keyPass) {
+        if (keyPass.length() > 24) {
+            key = keyPass.substring(0,24);
+//            System.out.println(key + " length: " + key.length());
+            iv = Arrays.copyOf(keyPass.getBytes(), 16);
+        }
     }
 
     /**
