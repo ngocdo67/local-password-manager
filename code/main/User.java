@@ -152,6 +152,8 @@ public class User {
                 return false;
             }
         }
+        if (newEntry.getPassword().equals("") || newEntry.getUsername().equals("") || newEntry.getAppname().equals(""))
+            return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
         System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());

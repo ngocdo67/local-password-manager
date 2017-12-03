@@ -30,6 +30,8 @@ public class SceneAccountGUI extends Application {
         root = new SplitPane();
         VBox left = new VBox();
         VBox right = new VBox();
+        CheckBox autoPw = new CheckBox();
+        CheckBox selfPw = new CheckBox();
         root.getItems().addAll(left, right);
         root.setDividerPosition(0, 0.45);
 
@@ -43,16 +45,21 @@ public class SceneAccountGUI extends Application {
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
 
+        autoPw.setText("Automatically generate password");
+        selfPw.setText("Set password yourself");
+
         Label password = new Label("Password: ");
         PasswordField pwBox = new PasswordField();
+        pwBox.setEditable(false);
 
         Label appName = new Label("Application:");
         TextField appTextField = new TextField();
 
         VBox vbox = new VBox();
         vbox.setSpacing(30);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(userName, userTextField, password, pwBox, appName, appTextField, addButton);
+
+        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addButton);
+
 
         left.getChildren().addAll(vbox);
 
@@ -84,12 +91,34 @@ public class SceneAccountGUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        selfPw.setOnAction(event ->
+        {
+            if (selfPw.isSelected()) {
+                pwBox.setEditable(true);
+                autoPw.setSelected(false);
+            }
+        });
+
+        autoPw.setOnAction(event ->
+        {
+            if (autoPw.isSelected()) {
+                pwBox.setEditable(false);
+                pwBox.setText("");
+                selfPw.setSelected(false);
+            }
+        });
 
         addButton.setOnAction(event ->
         {
-            Account acc = new Account (userTextField.getText(), pwBox.getText(), appTextField.getText());
-            if (user.addAccount(acc))
-                accountList.add(acc);
+            if (autoPw.isSelected()) {
+                Account acc = new Account(userTextField.getText(), 20, appTextField.getText());
+                if (user.addAccount(acc))
+                    accountList.add(acc);
+            } else if (selfPw.isSelected()) {
+                Account acc = new Account(userTextField.getText(), pwBox.getText(), appTextField.getText());
+                if (user.addAccount(acc))
+                    accountList.add(acc);
+            }
         });
     }
 
