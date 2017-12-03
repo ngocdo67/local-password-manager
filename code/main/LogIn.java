@@ -25,12 +25,13 @@ public class LogIn {
      * @param passwordInput  is the user's input for password to be verified
      */
     public boolean verifyNameAndPassword(String userLogInInput, String passwordInput) {
-        if (!user1.verifyLogInInput(userLogInInput)) {
+        User user = new User();
+        if (!user.verifyLogInInput(userLogInInput)) {
             System.out.println("Error! Wrong main.User Log In Name!");
             return false;
         }
 
-        if (!user1.verifyKeyPass(passwordInput)) {
+        if (!user.verifyKeyPass(passwordInput)) {
             System.out.println("Error! Wrong password!");
             return false;
         }

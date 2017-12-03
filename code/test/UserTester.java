@@ -49,7 +49,7 @@ public class UserTester {
      */
     private static void testGetAccount (User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
-        Account account = user.getAccount(0);
+        Account account = user.getAccount("0");
         System.out.println("Retrieved account: " + account.toString());
     }
     /**
@@ -61,9 +61,9 @@ public class UserTester {
     private static User testModifyAccount(User user) {
         System.out.println("\n---TEST MODIFY ACCOUNT---\n");
         Account modified = new Account("watermelon", "secret", "facebook");
-        user.modifyAccount(0, modified);
+        user.modifyAccount("0", modified);
         System.out.println("Account modified: " + modified.toString());
-        user.modifyAccount(10, modified);
+        user.modifyAccount("10", modified);
         return user;
     }
 
@@ -75,9 +75,9 @@ public class UserTester {
      */
     private static User testDeleteAccount(User user) {
         System.out.println("\n---TEST DELETE ACCOUNT---\n");
-        Account deleted = user.deleteAccount(3);
+        Account deleted = user.deleteAccount("3");
         System.out.println("Account deleted: " + deleted.toString());
-        user.deleteAccount(100);
+        user.deleteAccount("100");
         return user;
     }
 }
