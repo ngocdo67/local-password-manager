@@ -9,13 +9,13 @@ package main;
  */
 
 public class LogIn {
-    private User user1;
+    private User user;
 
     /**
      * Construct a new main.LogIn instance
      */
     public LogIn() {
-        user1 = new User("Group3", "CS310");
+        user = new User("User", "Password");
     }
 
     /**
@@ -25,16 +25,6 @@ public class LogIn {
      * @param passwordInput  is the user's input for password to be verified
      */
     public boolean verifyNameAndPassword(String userLogInInput, String passwordInput) {
-        User user = new User();
-        if (!user.verifyLogInInput(userLogInInput)) {
-            System.out.println("Error! Wrong main.User Log In Name!");
-            return false;
-        }
-
-        if (!user.verifyKeyPass(passwordInput)) {
-            System.out.println("Error! Wrong password!");
-            return false;
-        }
-        return true;
+        return user.verifyLogInInput(userLogInInput) && user.verifyKeyPass(passwordInput);
     }
 }

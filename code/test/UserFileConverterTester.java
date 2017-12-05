@@ -14,11 +14,11 @@ import java.util.Map;
  * @since 11-10-2017.
  */
 public class UserFileConverterTester {
-    static String keyPass = "ajfiwoefjauweihfuawieufhaweiufhawiefuhaaweuipfheu";
+    private static final String KEY_PASS = "ajfiwoefjauweihfuawieufhaweiufhawiefuhaaweuipfheu";
     public static void main (String[] argv) {
-        EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"), keyPass);
-        EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"), keyPass);
-        EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"), keyPass);
+        EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"), KEY_PASS);
+        EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"), KEY_PASS);
+        EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"), KEY_PASS);
         HashMap<String, EncryptedAccount> encryptedAccounts = new HashMap<>();
         encryptedAccounts.put ("1", account1);
         encryptedAccounts.put ("2", account2);
@@ -26,7 +26,7 @@ public class UserFileConverterTester {
 
         System.out.println ("---Map to serialize to the file---");
         for (EncryptedAccount encryptedAccount : encryptedAccounts.values()) {
-            Account account = new Account(encryptedAccount, keyPass);
+            Account account = new Account(encryptedAccount, KEY_PASS);
             System.out.println(account.toString());
         }
 
@@ -37,7 +37,7 @@ public class UserFileConverterTester {
         Map<String, EncryptedAccount> decryptedAccounts = userFileConverter.deserialize();
         System.out.println ("---Map to deserialize from the file---");
         for (EncryptedAccount encryptedAccount : decryptedAccounts.values()) {
-            Account account = new Account(encryptedAccount, keyPass);
+            Account account = new Account(encryptedAccount, KEY_PASS);
             System.out.println(account.toString());
         }
 
