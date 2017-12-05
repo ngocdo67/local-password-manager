@@ -22,8 +22,7 @@ public class AccountTester {
         Account acc3 = new Account("Mike", 12, "trinity.com");
         System.out.println(acc3);
 
-        User soham = new User();
-        soham.setKeyPass("Sohampassword");
+        User soham = new User("User", "Password");
         System.out.println(soham.verifyKeyPass("WrongPassWord"));
 
     }

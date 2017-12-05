@@ -15,8 +15,15 @@ public class LogInTester {
     public static void main(String[] args) {
 
         LogIn logInTestCase = new LogIn();
-        if (logInTestCase.verifyNameAndPassword("Shufan", "CS310")) {
+        if (logInTestCase.verifyNameAndPassword("User", "Password")) {
             System.out.println("We successfully verified this user. Welcome!");
+        } else {
+            System.out.println ("Wrong email / password");
+        }
+        if (logInTestCase.verifyNameAndPassword("ab", "ab")) {
+            System.out.println ("We successfully verified this user. Welcome!");
+        } else {
+            System.out.println ("Wrong email / password");
         }
     }
 }

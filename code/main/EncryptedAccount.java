@@ -10,7 +10,10 @@ import java.io.Serializable;
  * @since 11-10-2017
  */
 public class EncryptedAccount implements Serializable {
-    private byte[] userName, password, appName, id;
+    private byte[] userName;
+    private byte[] password;
+    private byte[] appName;
+    private byte[] id;
 
     /**
      * Constructs a new encrypted account instance.
