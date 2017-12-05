@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -41,6 +42,9 @@ public class SceneAccountGUI extends Application {
 
         Button addButton = new Button("Add account");
         addButton.setPrefSize(100, 20);
+        Label addDuplicate = new Label();
+        HBox addBox = new HBox();
+        addBox.getChildren().addAll(addButton, addDuplicate);
 
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
@@ -58,7 +62,7 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
 
-        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addButton);
+        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox);
 
 
         left.getChildren().addAll(vbox);
@@ -114,11 +118,18 @@ public class SceneAccountGUI extends Application {
                 Account acc = new Account(userTextField.getText(), 20, appTextField.getText());
                 if (user.addAccount(acc))
                     accountList.add(acc);
+                else
+                    addDuplicate.setText("  You cannot add a duplicated account");
             } else if (selfPw.isSelected()) {
                 Account acc = new Account(userTextField.getText(), pwBox.getText(), appTextField.getText());
                 if (user.addAccount(acc))
                     accountList.add(acc);
+                else
+                    addDuplicate.setText("  You cannot add a duplicated account");
             }
+            userTextField.setText("");
+            pwBox.setText("");
+            appTextField.setText("");
         });
     }
 
