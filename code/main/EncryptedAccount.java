@@ -10,15 +10,19 @@ import java.io.Serializable;
  * @since 11-10-2017
  */
 public class EncryptedAccount implements Serializable {
-    private byte[] userName, password, appName;
+    private byte[] userName;
+    private byte[] password;
+    private byte[] appName;
+    private byte[] id;
 
     /**
      * Constructs a new encrypted account instance.
      *
      * @param account a plain account.
      */
-    public EncryptedAccount(Account account) {
-        FileProtector fileProtector = new AesCbcModeFileProtector();
+    public EncryptedAccount(Account account, String keyPass) {
+        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
+        this.id = fileProtector.encrypt(account.getId());
         this.userName = fileProtector.encrypt(account.getUsername());
         this.password = fileProtector.encrypt(account.getPassword());
         this.appName = fileProtector.encrypt(account.getAppname());
@@ -52,6 +56,10 @@ public class EncryptedAccount implements Serializable {
         return this.appName;
     }
 
+    public byte[] getId () {
+        return this.id;
+    }
+
     // toString
 
     /**
@@ -60,7 +68,7 @@ public class EncryptedAccount implements Serializable {
      * @return toString of account object
      */
     public String toString() {
-        return "Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);
+        return "ID: " + new String(id) + " Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);
     }
 
 }

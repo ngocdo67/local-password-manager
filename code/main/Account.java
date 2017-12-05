@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * @since Oct 1, 2017
  */
 public class Account {
+    private String id = "-1";
     private String userName;
     private String password;
     private String appName;
@@ -34,8 +35,9 @@ public class Account {
      *
      * @param encryptedAccount an encrypted account.
      */
-    public Account(EncryptedAccount encryptedAccount) {
-        FileProtector fileProtector = new AesCbcModeFileProtector();
+    public Account(EncryptedAccount encryptedAccount, String keyPass) {
+        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
+        this.id = fileProtector.decrypt(encryptedAccount.getId());
         this.userName = fileProtector.decrypt(encryptedAccount.getUsername());
         this.password = fileProtector.decrypt(encryptedAccount.getPassword());
         this.appName = fileProtector.decrypt(encryptedAccount.getAppname());
@@ -87,13 +89,21 @@ public class Account {
         return this.appName;
     }
 
+    public void setId (String id) {
+        this.id = id;
+    }
+
+    public String getId () {
+        return this.id;
+    }
+
     /**
      * Creates toString
      *
      * @return toString of account object
      */
     public String toString() {
-        return "Username: " + userName + ", password: " + password + ", application: " + appName;
+        return "ID: " + id + " Username: " + userName + ", password: " + password + ", application: " + appName;
     }
 
 }
