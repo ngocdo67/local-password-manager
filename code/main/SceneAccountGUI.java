@@ -116,21 +116,24 @@ public class SceneAccountGUI extends Application {
         {
             if (autoPw.isSelected()) {
                 Account acc = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
-                if (user.addAccount(acc))
+                if (user.addAccount(acc)) {
                     accountList.add(acc);
+                    addDuplicate.setText("");
+                }
                 else
                     addDuplicate.setText("  You cannot add a duplicated or blank account");
             } else if (selfPw.isSelected()) {
                 Account acc = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
-                if (user.addAccount(acc))
+                if (user.addAccount(acc)) {
                     accountList.add(acc);
+                    addDuplicate.setText("");
+                }
                 else
                     addDuplicate.setText("  You cannot add a duplicated or blank account");
             }
             userTextField.setText("");
             pwBox.setText("");
             appTextField.setText("");
-            addDuplicate.setText("  You cannot add a duplicated or blank account");
         });
     }
 
