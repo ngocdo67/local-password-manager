@@ -43,7 +43,7 @@ public class SceneAccountGUI extends Application {
         Button addButton = new Button("Add account");
         addButton.setPrefSize(100, 20);
         Label addDuplicate = new Label();
-        HBox addBox = new HBox();
+        VBox addBox = new VBox();
         addBox.getChildren().addAll(addButton, addDuplicate);
 
         Label userName = new Label("User Name:");
@@ -115,21 +115,22 @@ public class SceneAccountGUI extends Application {
         addButton.setOnAction(event ->
         {
             if (autoPw.isSelected()) {
-                Account acc = new Account(userTextField.getText(), 20, appTextField.getText());
+                Account acc = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
                 if (user.addAccount(acc))
                     accountList.add(acc);
                 else
-                    addDuplicate.setText("  You cannot add a duplicated account");
+                    addDuplicate.setText("  You cannot add a duplicated or blank account");
             } else if (selfPw.isSelected()) {
-                Account acc = new Account(userTextField.getText(), pwBox.getText(), appTextField.getText());
+                Account acc = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
                 if (user.addAccount(acc))
                     accountList.add(acc);
                 else
-                    addDuplicate.setText("  You cannot add a duplicated account");
+                    addDuplicate.setText("  You cannot add a duplicated or blank account");
             }
             userTextField.setText("");
             pwBox.setText("");
             appTextField.setText("");
+            addDuplicate.setText("  You cannot add a duplicated or blank account");
         });
     }
 
