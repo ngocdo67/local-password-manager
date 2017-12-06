@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,8 @@ import java.util.logging.Logger;
  * @since 2017-10-12
  */
 public class User {
-    private static final String FILE_NAME = "code/resources/user.txt";
+    private static final String USER_FILE_NAME = "code/resources/user.txt";
+    private static final String LOGIN_FILE_NAME = "code/resources/login.txt";
     private String userLogIn, keyPass;
     private HashMap<String, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
@@ -31,14 +31,15 @@ public class User {
      * @param userLogIn is the username for the application
      * @param keyPass   is the password for the application
      */
-    public User(String userLogIn, String keyPass) {
-        this.userLogIn = userLogIn;
-        this.keyPass = hash(keyPass);
-
-        writeLoginFile();
-        userFileConverter = new UserFileConverter(FILE_NAME);
+    public User (String userLogIn, String keyPass) {
+        if (!readLoginFile()) {
+            this.userLogIn = userLogIn;
+            this.keyPass = hash(keyPass);
+            writeLoginFile();
+        }
+        userFileConverter = new UserFileConverter(USER_FILE_NAME);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
+            BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME));
             if (userFileConverter.doesFileExist() && br.readLine() != null) {
                 HashMap<String, EncryptedAccount> original = userFileConverter.deserialize();
                 manager = original == null ? new HashMap<>() : original;
@@ -46,26 +47,30 @@ public class User {
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading file", e);
         }
-
-    }
-
-    public User() {
-        readLoginFile();
     }
 
     private void writeLoginFile () {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("code/resources/login.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(LOGIN_FILE_NAME));
             writer.write(userLogIn + "\n");
-            writer.write(hash(keyPass));
+            writer.write(keyPass);
             writer.close();
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error writing user log in to file", e);
         }
     }
 
-    private void readLoginFile () {
-        try (BufferedReader br = new BufferedReader(new FileReader("code/resources/login.txt"))) {
+    private boolean readLoginFile () {
+        boolean readSuccess = false;
+        try {
+            if (new File (LOGIN_FILE_NAME).createNewFile()) {
+                return false;
+            }
+        } catch (IOException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(LOGIN_FILE_NAME))) {
             String line;
             if ((line = br.readLine()) != null) {
                 this.userLogIn = line;
@@ -73,9 +78,11 @@ public class User {
             if ((line = br.readLine()) != null) {
                 this.keyPass = line;
             }
+            readSuccess = true;
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
         }
+        return readSuccess;
     }
     /**
      * Hashes the user keyPass
@@ -194,6 +201,7 @@ public class User {
      */
     public void modifyAccount(String id, Account newEntry) {
         if (manager.containsKey(id)) {
+            newEntry.setId(id);
             manager.put(id, new EncryptedAccount(newEntry, keyPass));
             userFileConverter.serialize(manager);
         } else {
