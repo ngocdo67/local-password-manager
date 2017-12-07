@@ -152,19 +152,26 @@ public class User {
         String id = generateID();
         newEntry.setId(id);
         EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry, keyPass);
-        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
-                return false;
-            }
-        }
-        if (newEntry.getPassword().equals("") || newEntry.getUsername().equals("") || newEntry.getAppname().equals(""))
+        if (!validAccount(newEntry))
             return false;
-        manager.put(id, newEncryptedEntry);
-        userFileConverter.serialize(manager);
-        System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());
+        else {
+            manager.put(id, newEncryptedEntry);
+            userFileConverter.serialize(manager);
+            System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());
+        }
         return true;
     }
 
+    public boolean validAccount (Account newEntry) {
+        EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry, keyPass);
+        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
+            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname()))
+                return false;
+        }
+        if (newEntry.getPassword().equals("") || newEntry.getUsername().equals("") || newEntry.getAppname().equals(""))
+            return false;
+        return true;
+    }
     /**
      * This method generates random id for the account.
      *
@@ -210,15 +217,22 @@ public class User {
      * @param id       is the ID number of the account we are modifying
      * @param newEntry is the new account
      */
-    public void modifyAccount(String id, Account newEntry) {
+    public boolean modifyAccount(String id, Account newEntry) {
         if (manager.containsKey(id)) {
-            newEntry.setId(id);
-            manager.put(id, new EncryptedAccount(newEntry, keyPass));
-            userFileConverter.serialize(manager);
+            if (validAccount(newEntry)) {
+                newEntry.setId(id);
+                manager.put(id, new EncryptedAccount(newEntry, keyPass));
+                userFileConverter.serialize(manager);
+            }
+            else {
+                System.out.println("The new account is either duplicated or blank");
+                return false;
+            }
         } else {
             System.out.println("This ID does not exist!");
+            return false;
         }
-
+        return true;
     }
 
     /**
