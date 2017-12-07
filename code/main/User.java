@@ -106,7 +106,6 @@ public class User {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             hashPassword = sb.toString();
-//            System.out.println("Hashed: " + hashPassword);
         } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
@@ -199,7 +198,9 @@ public class User {
      * @return account if it exists, or null if it does not
      */
     public Account getAccount(String userID) {
-        return new Account(manager.get(userID), keyPass);
+        if (manager.get(userID) != null)
+            return new Account(manager.get(userID), keyPass);
+        return null;
     }
 
 
@@ -220,7 +221,6 @@ public class User {
 
     }
 
-
     /**
      * Gets the account from the manager hashmap and removes the account from the hashmap
      *
@@ -232,7 +232,8 @@ public class User {
             System.out.println("Error in deleting account: This id does not exist in the manager hashmap.");
             return null;
         }
+        EncryptedAccount encryptedAcc = manager.remove(id);
         userFileConverter.serialize(manager);
-        return new Account(manager.remove(id), keyPass);
+        return new Account(encryptedAcc, keyPass);
     }
 }

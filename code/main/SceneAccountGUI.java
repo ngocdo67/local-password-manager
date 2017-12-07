@@ -6,6 +6,8 @@
 package main;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -46,6 +48,12 @@ public class SceneAccountGUI extends Application {
         VBox addBox = new VBox();
         addBox.getChildren().addAll(addButton, addDuplicate);
 
+        Button deleteButton = new Button ("Delete Account");
+        deleteButton.setPrefSize(100,20);
+        Label deleteErr = new Label();
+        VBox deleteBox = new VBox();
+        deleteBox.getChildren().addAll(deleteButton, deleteErr);
+
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
 
@@ -62,13 +70,12 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
 
-        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox);
+        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox);
 
 
         left.getChildren().addAll(vbox);
 
-        TableView<Account> tvAccount;
-        tvAccount = new TableView<Account>(accountList);
+        TableView<Account> tvAccount = new TableView<Account>(accountList);
 
         TableColumn<Account, String> uName = new TableColumn<>("User Name");
         uName.setCellValueFactory(new PropertyValueFactory<>("Username"));
@@ -81,7 +88,7 @@ public class SceneAccountGUI extends Application {
 
         tvAccount.getColumns().addAll(uName, pw, aName);
         tvAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        //tvAccount.setPrefWidth(350);
+        tvAccount.setPrefWidth(300);
         tvAccount.setPrefHeight(700);
 
         right.getChildren().addAll(tvAccount);
@@ -134,6 +141,18 @@ public class SceneAccountGUI extends Application {
             userTextField.setText("");
             pwBox.setText("");
             appTextField.setText("");
+        });
+
+        deleteButton.setOnAction(event -> {
+            Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                user.deleteAccount(selectedItem.getId());
+                tvAccount.getItems().remove(selectedItem);
+                deleteErr.setText("");
+            }
+            else
+                deleteErr.setText("Please choose an account you want to delete first.");
+            tvAccount.getSelectionModel().clearSelection();
         });
     }
 

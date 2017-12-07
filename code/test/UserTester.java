@@ -50,7 +50,10 @@ public class UserTester {
     private static void testGetAccount (User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
         Account account = user.getAccount("0");
-        System.out.println("Retrieved account: " + account.toString());
+        if (account != null)
+            System.out.println("Retrieved account: " + account.toString());
+        else
+            System.out.println("This account does not exist!");
     }
     /**
      * This method tests the modify method of the user.
@@ -61,7 +64,7 @@ public class UserTester {
     private static User testModifyAccount(User user) {
         System.out.println("\n---TEST MODIFY ACCOUNT---\n");
         Account modified = new Account("watermelon", "secret", "facebook");
-        user.modifyAccount("0", modified);
+        user.modifyAccount("2", modified);
         System.out.println("Account modified: " + modified.toString());
         user.modifyAccount("10", modified);
         return user;
