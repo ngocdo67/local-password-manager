@@ -6,6 +6,7 @@ import main.Account;
 public class UserTester {
     public static void main(String[] args) {
         User user = new User("User", "Password");
+        user.deleteAllAccount();
         user = testAddAccount(user);
         user.displayManager();
         testGetAccount(user);
@@ -15,12 +16,6 @@ public class UserTester {
         user.displayManager();
     }
 
-    /**
-     * This method tests the add method of the user.
-     *
-     * @param user current user
-     * @return user after accounts are added.
-     */
     private static User testAddAccount(User user) {
         System.out.println("\n---TEST ADD ACCOUNT---\n");
         Account a = new Account("apple", "fruit", "gmail");
@@ -41,42 +36,27 @@ public class UserTester {
         return user;
     }
 
-    /**
-     * This method tests the get method of the user.
-     *
-     * @param user current user
-     * @return user after accounts are modified.
-     */
     private static void testGetAccount (User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
         Account account = user.getAccount("0");
-
-        System.out.println("Retrieved account: " + account.toString());
+        if (account != null)
+            System.out.println("Retrieved account: " + account.toString());
+        else
+            System.out.println("This account does not exist!");
     }
-    /**
-     * This method tests the modify method of the user.
-     *
-     * @param user current user
-     * @return user after accounts are modified.
-     */
+
     private static User testModifyAccount(User user) {
         System.out.println("\n---TEST MODIFY ACCOUNT---\n");
         Account modified = new Account("watermelon", "secret", "facebook");
-        user.modifyAccount("0", modified);
+        user.modifyAccount("2", modified);
         System.out.println("Account modified: " + modified.toString());
         user.modifyAccount("10", modified);
         return user;
     }
 
-    /**
-     * This method tests the delete method of the user.
-     *
-     * @param user current user
-     * @return user after accounts are deleted.
-     */
     private static User testDeleteAccount(User user) {
         System.out.println("\n---TEST DELETE ACCOUNT---\n");
-        Account deleted = user.deleteAccount("3");
+        Account deleted = user.deleteAccount("0");
         System.out.println("Account deleted: " + deleted.toString());
         user.deleteAccount("100");
         return user;

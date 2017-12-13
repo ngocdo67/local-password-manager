@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,8 @@ import java.util.logging.Logger;
  * @since 2017-10-12
  */
 public class User {
-    private static final String FILE_NAME = "code/resources/user.txt";
+    private static final String USER_FILE_NAME = "code/resources/user.txt";
+    private static final String LOGIN_FILE_NAME = "code/resources/login.txt";
     private String userLogIn, keyPass;
     private HashMap<String, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
@@ -32,13 +32,14 @@ public class User {
      * @param keyPass   is the password for the application
      */
     public User(String userLogIn, String keyPass) {
-        this.userLogIn = userLogIn;
-        this.keyPass = hash(keyPass);
-
-        writeLoginFile();
-        userFileConverter = new UserFileConverter(FILE_NAME);
+        if (!readLoginFile()) {
+            this.userLogIn = userLogIn;
+            this.keyPass = hash(keyPass);
+            writeLoginFile();
+        }
+        userFileConverter = new UserFileConverter(USER_FILE_NAME);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
+            BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME));
             if (userFileConverter.doesFileExist() && br.readLine() != null) {
                 HashMap<String, EncryptedAccount> original = userFileConverter.deserialize();
                 manager = original == null ? new HashMap<>() : original;
@@ -46,26 +47,31 @@ public class User {
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading file", e);
         }
-
     }
 
-    public User() {
-        readLoginFile();
-    }
 
-    private void writeLoginFile () {
+    private void writeLoginFile() {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("code/resources/login.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(LOGIN_FILE_NAME));
             writer.write(userLogIn + "\n");
-            writer.write(hash(keyPass));
+            writer.write(keyPass);
             writer.close();
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error writing user log in to file", e);
         }
     }
 
-    private void readLoginFile () {
-        try (BufferedReader br = new BufferedReader(new FileReader("code/resources/login.txt"))) {
+    private boolean readLoginFile() {
+        boolean readSuccess = false;
+        try {
+            if (new File(LOGIN_FILE_NAME).createNewFile()) {
+                return false;
+            }
+        } catch (IOException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(LOGIN_FILE_NAME))) {
             String line;
             if ((line = br.readLine()) != null) {
                 this.userLogIn = line;
@@ -73,10 +79,22 @@ public class User {
             if ((line = br.readLine()) != null) {
                 this.keyPass = line;
             }
+            readSuccess = true;
         } catch (IOException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
         }
+        return readSuccess;
     }
+
+    /**
+     * Get the hashed key pass
+     *
+     * @return hashed key pass.
+     */
+    public String getKeyPass() {
+        return keyPass;
+    }
+
     /**
      * Hashes the user keyPass
      *
@@ -90,24 +108,14 @@ public class User {
             byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
             //System.out.println(bytes);
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            for (byte oneByte : bytes) {
+                sb.append(Integer.toString((oneByte & 0xff) + 0x100, 16).substring(1));
             }
             hashPassword = sb.toString();
-//            System.out.println("Hashed: " + hashPassword);
         } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
         return hashPassword;
-    }
-
-    /**
-     * Sets a Users keyPass
-     *
-     * @param keyPass the desired keyPass
-     */
-    public void setKeyPass(String keyPass) {
-        this.keyPass = hash(keyPass);
     }
 
     /**
@@ -123,12 +131,12 @@ public class User {
     /**
      * Verifies a Users keyPass with the entered password
      *
-     * @param passwordInput: the user input password, waiting to be verified
+     * @param passwordInput the user input password, waiting to be verified
      * @return true if password matches, false if it does not
      */
     public boolean verifyKeyPass(String passwordInput) {
         String verifyPassword = hash(passwordInput);
-        return this.keyPass != null && hash(this.keyPass).equals(verifyPassword);
+        return this.keyPass != null && this.keyPass.equals(verifyPassword);
     }
 
     /**
@@ -138,25 +146,27 @@ public class User {
      * @return boolean true if an account is successfully added, false if fails to add an account because an account already exists.
      */
     public boolean addAccount(Account newEntry) {
+        if (newEntry == null || newEntry.isInvalid()) return false;
         String id = generateID();
         newEntry.setId(id);
-        EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry, keyPass);
-        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
-                return false;
-            }
-        }
+        EncryptedAccount newEncryptedEntry = newEntry.encryptAccount(keyPass);
+        if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
-        System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());
+        System.out.println("Added " + newEntry);
         return true;
     }
 
-    /**
-     * This method generates random id for the account.
-     *
-     * @return int a randomly generated id that is different from all ids of existing accounts.
-     */
+    private boolean isNewEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
+        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
+            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername())
+                    && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String generateID() {
         Random random = new Random();
         int id = random.nextInt(manager.size() + 1);
@@ -171,13 +181,19 @@ public class User {
      */
     public void displayManager() {
         for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            System.out.println("Key: " + account.getKey() + " Value: " + new Account(account.getValue(), keyPass));
+            System.out.println("Key: " + account.getKey() + " Value: " + account.getValue().decryptAccount(keyPass));
         }
     }
 
+    /**
+     * This returns the hash map of all keys
+     *
+     * @return hash map of all keys.
+     */
     public HashMap getHashMap() {
         return manager;
     }
+
     /**
      * Retrieves account based on user_ID in manager.
      *
@@ -185,9 +201,11 @@ public class User {
      * @return account if it exists, or null if it does not
      */
     public Account getAccount(String userID) {
-        return new Account(manager.get(userID), keyPass);
+        if (manager.get(userID) != null) {
+            return manager.get(userID).decryptAccount(keyPass);
+        }
+        return null;
     }
-
 
     /**
      * Modifies account within manager.
@@ -195,16 +213,18 @@ public class User {
      * @param id       is the ID number of the account we are modifying
      * @param newEntry is the new account
      */
-    public void modifyAccount(String id, Account newEntry) {
+    public boolean modifyAccount(String id, Account newEntry) {
         if (manager.containsKey(id)) {
-            manager.put(id, new EncryptedAccount(newEntry, keyPass));
+            newEntry.setId(id);
+            manager.put(id, newEntry.encryptAccount(keyPass));
             userFileConverter.serialize(manager);
+            return true;
         } else {
             System.out.println("This ID does not exist!");
+            return false;
         }
 
     }
-
 
     /**
      * Gets the account from the manager hashmap and removes the account from the hashmap
@@ -217,7 +237,16 @@ public class User {
             System.out.println("Error in deleting account: This id does not exist in the manager hashmap.");
             return null;
         }
+        EncryptedAccount encryptedAcc = manager.remove(id);
         userFileConverter.serialize(manager);
-        return new Account(manager.remove(id), keyPass);
+        return encryptedAcc.decryptAccount(keyPass);
+    }
+
+    /**
+     * This method deletes all accounts of the user.
+     */
+    public void deleteAllAccount() {
+        manager = new HashMap<>();
+        userFileConverter.serialize(manager);
     }
 }
