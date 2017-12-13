@@ -1,6 +1,7 @@
 package main;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * This defines an encrypted account for an user.
@@ -10,20 +11,40 @@ import java.io.Serializable;
  * @since 11-10-2017
  */
 public class EncryptedAccount implements Serializable {
-    private byte[] userName, password, appName;
+    private byte[] userName;
+    private byte[] password;
+    private byte[] appName;
+    private byte[] id;
 
     /**
-     * Constructs a new encrypted account instance.
+     * Constructor
      *
-     * @param account a plain account.
+     * @param id       encrypted id
+     * @param userName encrypted user name
+     * @param password encrypted password
+     * @param appName  encrypted app name.
      */
-    public EncryptedAccount(Account account) {
-        FileProtector fileProtector = new AesCbcModeFileProtector();
-        this.userName = fileProtector.encrypt(account.getUsername());
-        this.password = fileProtector.encrypt(account.getPassword());
-        this.appName = fileProtector.encrypt(account.getAppname());
+    public EncryptedAccount(byte[] id, byte[] userName, byte[] password, byte[] appName) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.appName = appName;
     }
 
+    /**
+     * Decrypts an account
+     *
+     * @param keyPass key pass used for decryption
+     * @return a decrypted account.
+     */
+    public Account decryptAccount(String keyPass) {
+        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
+        String plainId = fileProtector.decrypt(id);
+        String plainUserName = fileProtector.decrypt(userName);
+        String plainPassword = fileProtector.decrypt(password);
+        String plainAppName = fileProtector.decrypt(appName);
+        return new Account(plainId, plainUserName, plainPassword, plainAppName);
+    }
 
     /**
      * Returns account username.
@@ -35,15 +56,6 @@ public class EncryptedAccount implements Serializable {
     }
 
     /**
-     * Returns account password.
-     *
-     * @return passWord
-     */
-    public byte[] getPassword() {
-        return this.password;
-    }
-
-    /**
      * Returns account application name.
      *
      * @return appName
@@ -52,15 +64,19 @@ public class EncryptedAccount implements Serializable {
         return this.appName;
     }
 
-    // toString
-
     /**
-     * Creates toString
+     * Returns id of encrypted account
      *
-     * @return toString of account object
+     * @return id
      */
-    public String toString() {
-        return "Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);
+    public byte[] getId() {
+        return this.id;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + new String(id) + " Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);
+    }
+
 
 }

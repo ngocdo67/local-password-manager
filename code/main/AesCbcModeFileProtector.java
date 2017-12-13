@@ -8,6 +8,7 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +21,8 @@ import java.util.logging.Logger;
  * Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
  */
 public class AesCbcModeFileProtector implements FileProtector {
+    private static final int MIN_KEY_PASS_LENGTH = 24;
+    private static final int IV_LENGTH = 16;
     private String key = "SECRET_1SECRET_2SECRET_3";
     private byte[] iv = "SECRET_4SECRET_5".getBytes();
 
@@ -30,11 +33,18 @@ public class AesCbcModeFileProtector implements FileProtector {
     }
 
     /**
-     * This encrypts a string.
+     * Constructor
      *
-     * @param plainText plain text in String
-     * @return a byte array of the encrypted string.
+     * @param keyPass key pass as the key for encryption / decryption.
      */
+    public AesCbcModeFileProtector(String keyPass) {
+        if (keyPass.length() > MIN_KEY_PASS_LENGTH) {
+            key = keyPass.substring(0, MIN_KEY_PASS_LENGTH);
+            iv = Arrays.copyOf(keyPass.getBytes(), IV_LENGTH);
+        }
+    }
+
+    @Override
     public byte[] encrypt(String plainText) {
         if (plainText == null) {
             return null;
@@ -48,12 +58,7 @@ public class AesCbcModeFileProtector implements FileProtector {
         return encrypted;
     }
 
-    /**
-     * This decrypts a byte array
-     *
-     * @param encrypted the encrypted text in byte array
-     * @return decrypted text in string.
-     */
+    @Override
     public String decrypt(byte[] encrypted) {
         if (encrypted == null) {
             return null;
@@ -67,16 +72,6 @@ public class AesCbcModeFileProtector implements FileProtector {
         return decrypted == null ? null : new String(decrypted);
     }
 
-    /**
-     * This decrypts a byte array of cipher using AES, CBC mode of bouncy castle.
-     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
-     *
-     * @param cipher encrypted byte array
-     * @param key    key
-     * @param iv     initialization vector
-     * @return decrypted byte array
-     * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     */
     private byte[] decrypt(byte[] cipher, byte[] key, byte[] iv) throws InvalidCipherTextException {
         PaddedBufferedBlockCipher aes = new PaddedBufferedBlockCipher(new CBCBlockCipher(
                 new AESEngine()));
@@ -85,16 +80,6 @@ public class AesCbcModeFileProtector implements FileProtector {
         return cipherData(aes, cipher);
     }
 
-    /**
-     * This encrypts a byte array of plain text using AES, CBC mode of bouncy castle.
-     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
-     *
-     * @param plain encrypted byte array
-     * @param key   key
-     * @param iv    initialization vector
-     * @return encrypted byte array
-     * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     */
     private byte[] encrypt(byte[] plain, byte[] key, byte[] iv) throws InvalidCipherTextException {
         PaddedBufferedBlockCipher aes = new PaddedBufferedBlockCipher(new CBCBlockCipher(
                 new AESEngine()));
@@ -103,15 +88,6 @@ public class AesCbcModeFileProtector implements FileProtector {
         return cipherData(aes, plain);
     }
 
-    /**
-     * This encrypts or decrypts a byte array
-     * Source: Reference: https://stackoverflow.com/questions/4243650/aes-encryption-decryption-with-bouncycastle-example-in-j2me
-     *
-     * @param cipher the type of cipher used
-     * @param data   data in byte array
-     * @return an encrypted or decrypted byte array
-     * @throws InvalidCipherTextException is thrown when the cipher text is invalid.
-     */
     private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws InvalidCipherTextException {
         int minSize = cipher.getOutputSize(data.length);
         byte[] outBuf = new byte[minSize];
