@@ -6,27 +6,23 @@
 package main;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 public class SceneAccountGUI extends Application {
-	User user = new User("User", "Password");
+    User user = new User("User", "Password");
     Stage theStage;
     Scene scene;
     SplitPane root;
-    ObservableList<Account> accountList = FXCollections.observableArrayList();; 
-    
+    ObservableList<Account> accountList = FXCollections.observableArrayList();
+
     @Override
     public void start(Stage primaryStage) {
         theStage = primaryStage;
@@ -48,11 +44,17 @@ public class SceneAccountGUI extends Application {
         VBox addBox = new VBox();
         addBox.getChildren().addAll(addButton, addDuplicate);
 
-        Button deleteButton = new Button ("Delete Account");
-        deleteButton.setPrefSize(100,20);
+        Button deleteButton = new Button("Delete Account");
+        deleteButton.setPrefSize(100, 20);
         Label deleteErr = new Label();
         VBox deleteBox = new VBox();
         deleteBox.getChildren().addAll(deleteButton, deleteErr);
+
+        Button modifyButton = new Button("Modify Account");
+        modifyButton.setPrefSize(100, 20);
+        Label modifyErr = new Label();
+        VBox modifyBox = new VBox();
+        modifyBox.getChildren().addAll(modifyButton, modifyErr);
 
         Label userName = new Label("User Name:");
         TextField userTextField = new TextField();
@@ -70,7 +72,7 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
 
-        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox);
+        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox, modifyBox);
 
 
         left.getChildren().addAll(vbox);
@@ -94,7 +96,8 @@ public class SceneAccountGUI extends Application {
         right.getChildren().addAll(tvAccount);
 
         user.getHashMap().forEach((key, value) -> {
-            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
+//            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
+            Account account = ((EncryptedAccount) value).decryptAccount(user.getKeyPass());
             accountList.add(account);
         });
 
@@ -119,48 +122,79 @@ public class SceneAccountGUI extends Application {
             }
         });
 
-        addButton.setOnAction(event ->
-        {
-            if (autoPw.isSelected()) {
-                Account acc = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
-                if (user.addAccount(acc)) {
-                    accountList.add(acc);
-                    addDuplicate.setText("");
-                }
-                else
-                    addDuplicate.setText("  You cannot add a duplicated or blank account");
-            } else if (selfPw.isSelected()) {
-                Account acc = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
-                if (user.addAccount(acc)) {
-                    accountList.add(acc);
-                    addDuplicate.setText("");
-                }
-                else
-                    addDuplicate.setText("  You cannot add a duplicated or blank account");
-            }
+        addButton.setOnAction(event -> {
+            Account acc = new Account("", "", "");
+            if (autoPw.isSelected())
+                acc = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
+            else if (selfPw.isSelected())
+                acc = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
+            if (user.addAccount(acc)) {
+                accountList.add(acc);
+                addDuplicate.setText("");
+            } else
+                addDuplicate.setText("  You cannot add a duplicated or blank account");
             userTextField.setText("");
             pwBox.setText("");
             appTextField.setText("");
+            textFieldsToVoid(userTextField, pwBox, appTextField);
+            deleteErr.setText("");
+            modifyErr.setText("");
         });
 
         deleteButton.setOnAction(event -> {
-            Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                user.deleteAccount(selectedItem.getId());
-                tvAccount.getItems().remove(selectedItem);
+            Account deletedItem = tvAccount.getSelectionModel().getSelectedItem();
+            if (deletedItem != null) {
+                user.deleteAccount(deletedItem.getId());
+                tvAccount.getItems().remove(deletedItem);
                 deleteErr.setText("");
-            }
-            else
-                deleteErr.setText("Please choose an account you want to delete first.");
+            } else
+                deleteErr.setText("Please choose an account you want to delete.");
             tvAccount.getSelectionModel().clearSelection();
+            textFieldsToVoid(userTextField, pwBox, appTextField);
+            modifyErr.setText("");
+            addDuplicate.setText("");
+        });
+
+        modifyButton.setOnAction(event -> {
+            Account modifiedItem = tvAccount.getSelectionModel().getSelectedItem();
+            Account newItem = new Account("", "", "");
+            if (modifiedItem != null) {
+                if (autoPw.isSelected())
+                    newItem = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
+                else if (selfPw.isSelected())
+                    newItem = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
+                if (user.modifyAccount(modifiedItem.getId(), newItem)) {
+                    tvAccount.getItems().set(accountList.indexOf(modifiedItem), newItem);
+                    modifyErr.setText("");
+                } else
+                    modifyErr.setText("  You cannot modify this entry with a duplicated or blank account");
+            } else
+                modifyErr.setText("Please choose an account you want to modify.");
+            tvAccount.getSelectionModel().clearSelection();
+            textFieldsToVoid(userTextField, pwBox, appTextField);
+            addDuplicate.setText("");
+            deleteErr.setText("");
+        });
+
+        tvAccount.setOnMouseClicked(event -> {
+            Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
+            userTextField.setText(selectedItem.getUsername());
+            pwBox.setText(selectedItem.getPassword());
+            appTextField.setText(selectedItem.getAppname());
         });
     }
 
-   /**
+    public void textFieldsToVoid(TextField userName, TextField pw, TextField appName) {
+        userName.setText("");
+        pw.setText("");
+        appName.setText("");
+    }
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

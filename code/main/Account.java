@@ -29,16 +29,33 @@ public class Account {
     }
 
     /**
-     * Constructor from an encrypted account.
+     * Constructs a new account instance.
      *
-     * @param encryptedAccount an encrypted account.
+     * @param id       id
+     * @param userName username
+     * @param password account password
+     * @param appName  name of application
      */
-    public Account(EncryptedAccount encryptedAccount, String keyPass) {
+    public Account(String id, String userName, String password, String appName) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.appName = appName;
+    }
+
+    /**
+     * Encrypt the account
+     *
+     * @param keyPass key pass for encryption
+     * @return an encrypted account.
+     */
+    public EncryptedAccount encryptAccount(String keyPass) {
         FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
-        this.id = fileProtector.decrypt(encryptedAccount.getId());
-        this.userName = fileProtector.decrypt(encryptedAccount.getUsername());
-        this.password = fileProtector.decrypt(encryptedAccount.getPassword());
-        this.appName = fileProtector.decrypt(encryptedAccount.getAppname());
+        byte[] encryptedId = fileProtector.encrypt(id);
+        byte[] encryptedUserName = fileProtector.encrypt(userName);
+        byte[] encryptedPassword = fileProtector.encrypt(password);
+        byte[] encryptedAppName = fileProtector.encrypt(appName);
+        return new EncryptedAccount(encryptedId, encryptedUserName, encryptedPassword, encryptedAppName);
     }
 
     /**
@@ -87,6 +104,7 @@ public class Account {
         return this.appName;
     }
 
+
     /**
      * This assigns an id to the account when it is added or modified to application.
      *
@@ -103,6 +121,19 @@ public class Account {
      */
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * Checks if an account has any null or empty field.
+     *
+     * @return true if it has any null or empty field, false otherwise.
+     */
+    public boolean isInvalid() {
+        return isFieldEmpty(id) || isFieldEmpty(userName) || isFieldEmpty(password) || isFieldEmpty(appName);
+    }
+
+    private boolean isFieldEmpty(String field) {
+        return field != null && field.length() == 0;
     }
 
     @Override

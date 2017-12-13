@@ -34,11 +34,12 @@ public class AesCbcModeFileProtector implements FileProtector {
 
     /**
      * Constructor
+     *
      * @param keyPass key pass as the key for encryption / decryption.
      */
     public AesCbcModeFileProtector(String keyPass) {
         if (keyPass.length() > MIN_KEY_PASS_LENGTH) {
-            key = keyPass.substring(0,MIN_KEY_PASS_LENGTH);
+            key = keyPass.substring(0, MIN_KEY_PASS_LENGTH);
             iv = Arrays.copyOf(keyPass.getBytes(), IV_LENGTH);
         }
     }
