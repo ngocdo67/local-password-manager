@@ -16,13 +16,7 @@ import java.util.Map;
 public class UserFileConverterTester {
     private static final String KEY_PASS = "ajfiwoefjauweihfuawieufhaweiufhawiefuhaaweuipfheu";
     public static void main (String[] argv) {
-        EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"), KEY_PASS);
-        EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"), KEY_PASS);
-        EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"), KEY_PASS);
-        HashMap<String, EncryptedAccount> encryptedAccounts = new HashMap<>();
-        encryptedAccounts.put ("1", account1);
-        encryptedAccounts.put ("2", account2);
-        encryptedAccounts.put ("3", account3);
+        HashMap<String, EncryptedAccount> encryptedAccounts = initializeEncryptedAccounts();
 
         System.out.println ("---Map to serialize to the file---");
         for (EncryptedAccount encryptedAccount : encryptedAccounts.values()) {
@@ -30,7 +24,7 @@ public class UserFileConverterTester {
             System.out.println(account.toString());
         }
 
-        UserFileConverter userFileConverter = new UserFileConverter("user.txt");
+        UserFileConverter userFileConverter = new UserFileConverter("code/resources/test_converter.txt");
         userFileConverter.serialize(encryptedAccounts);
 
 
@@ -41,5 +35,16 @@ public class UserFileConverterTester {
             System.out.println(account.toString());
         }
 
+    }
+
+    private static HashMap<String, EncryptedAccount> initializeEncryptedAccounts() {
+        EncryptedAccount account1 = new EncryptedAccount(new Account("apple", "fruit", "gmail"), KEY_PASS);
+        EncryptedAccount account2 = new EncryptedAccount(new Account("banana", "fruit", "yahoo"), KEY_PASS);
+        EncryptedAccount account3 = new EncryptedAccount(new Account("cinnamon", 10, "amazon"), KEY_PASS);
+        HashMap<String, EncryptedAccount> encryptedAccounts = new HashMap<>();
+        encryptedAccounts.put ("1", account1);
+        encryptedAccounts.put ("2", account2);
+        encryptedAccounts.put ("3", account3);
+        return encryptedAccounts;
     }
 }

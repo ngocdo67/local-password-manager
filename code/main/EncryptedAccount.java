@@ -56,17 +56,16 @@ public class EncryptedAccount implements Serializable {
         return this.appName;
     }
 
+    /**
+     * Returns id of encrypted account
+     *
+     * @return id
+     */
     public byte[] getId () {
         return this.id;
     }
 
-    // toString
-
-    /**
-     * Creates toString
-     *
-     * @return toString of account object
-     */
+    @Override
     public String toString() {
         return "ID: " + new String(id) + " Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);
     }

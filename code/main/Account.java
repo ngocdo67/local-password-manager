@@ -7,9 +7,7 @@ import java.util.logging.Logger;
  * This class defines an account of an user
  *
  * @author Group 3
- * @instructor Prof Ewa Syta
- * @title CS 310 Software Design Group Project
- * @since Oct 1, 2017
+ * @since Oct 1, 2017.
  */
 public class Account {
     private String id = "-1";
@@ -89,19 +87,25 @@ public class Account {
         return this.appName;
     }
 
-    public void setId (String id) {
+    /**
+     * This assigns an id to the account when it is added or modified to application.
+     *
+     * @param id new id.
+     */
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getId () {
+    /**
+     * Returns the account id
+     *
+     * @return account id.
+     */
+    public String getId() {
         return this.id;
     }
 
-    /**
-     * Creates toString
-     *
-     * @return toString of account object
-     */
+    @Override
     public String toString() {
         return "ID: " + id + " Username: " + userName + ", password: " + password + ", application: " + appName;
     }

@@ -86,9 +86,14 @@ public class User {
         return readSuccess;
     }
 
+    /**
+     * Get the hashed key pass
+     * @return hashed key pass.
+     */
     public String getKeyPass() {
         return keyPass;
     }
+
     /**
      * Hashes the user keyPass
      *
@@ -102,23 +107,14 @@ public class User {
             byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
             //System.out.println(bytes);
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            for (byte oneByte : bytes) {
+                sb.append(Integer.toString((oneByte & 0xff) + 0x100, 16).substring(1));
             }
             hashPassword = sb.toString();
         } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
         return hashPassword;
-    }
-
-    /**
-     * Sets a Users keyPass
-     *
-     * @param keyPass the desired keyPass
-     */
-    public void setKeyPass(String keyPass) {
-        this.keyPass = hash(keyPass);
     }
 
     /**
@@ -134,7 +130,7 @@ public class User {
     /**
      * Verifies a Users keyPass with the entered password
      *
-     * @param passwordInput: the user input password, waiting to be verified
+     * @param passwordInput the user input password, waiting to be verified
      * @return true if password matches, false if it does not
      */
     public boolean verifyKeyPass(String passwordInput) {
@@ -149,27 +145,34 @@ public class User {
      * @return boolean true if an account is successfully added, false if fails to add an account because an account already exists.
      */
     public boolean addAccount(Account newEntry) {
+        if (isNewEntryInvalid(newEntry)) return false;
         String id = generateID();
         newEntry.setId(id);
         EncryptedAccount newEncryptedEntry = new EncryptedAccount(newEntry, keyPass);
-        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
-                return false;
-            }
-        }
-        if (newEntry.getPassword().equals("") || newEntry.getUsername().equals("") || newEntry.getAppname().equals(""))
-            return false;
+        if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
         System.out.println("Added " + newEntry.getUsername() + " " + newEntry.getAppname());
         return true;
     }
 
-    /**
-     * This method generates random id for the account.
-     *
-     * @return int a randomly generated id that is different from all ids of existing accounts.
-     */
+    private boolean isNewEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
+        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
+            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername()) && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isNewEntryInvalid (Account newEntry) {
+        return newEntry == null || isEntryFieldEmpty(newEntry.getUsername()) || isEntryFieldEmpty(newEntry.getAppname()) || isEntryFieldEmpty(newEntry.getPassword());
+    }
+
+    private boolean isEntryFieldEmpty(String entryField) {
+        return entryField != null && entryField.length() == 0;
+    }
+
     private String generateID() {
         Random random = new Random();
         int id = random.nextInt(manager.size() + 1);
@@ -188,9 +191,14 @@ public class User {
         }
     }
 
+    /**
+     * This returns the hash map of all keys
+     * @return hash map of all keys.
+     */
     public HashMap getHashMap() {
         return manager;
     }
+
     /**
      * Retrieves account based on user_ID in manager.
      *
@@ -202,7 +210,6 @@ public class User {
             return new Account(manager.get(userID), keyPass);
         return null;
     }
-
 
     /**
      * Modifies account within manager.
@@ -235,5 +242,13 @@ public class User {
         EncryptedAccount encryptedAcc = manager.remove(id);
         userFileConverter.serialize(manager);
         return new Account(encryptedAcc, keyPass);
+    }
+
+    /**
+     * This method deletes all accounts of the user.
+     */
+    public void deleteAllAccount () {
+        manager = new HashMap<>();
+        userFileConverter.serialize(manager);
     }
 }
