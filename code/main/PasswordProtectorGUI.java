@@ -62,7 +62,7 @@ public class PasswordProtectorGUI extends Application {
         final Text actiontarget = new Text();
         root.add(actiontarget, 1, 6);
         
-        primaryStage.setTitle("Pas$$w0rd");
+        primaryStage.setTitle("Pa$$w0rd");
         primaryStage.setScene(scene);
         primaryStage.show();
         
