@@ -19,6 +19,7 @@ import java.util.Optional;
 
 
 public class SceneAccountGUI extends Application {
+
 	private User user = new User("User", "Password");
     private ObservableList<Account> accountList = FXCollections.observableArrayList();
     private TextField userTextField;
@@ -49,14 +50,16 @@ public class SceneAccountGUI extends Application {
         VBox addBox = new VBox();
         addBox.getChildren().addAll(addButton, addDuplicate);
 
-        Button deleteButton = new Button ("Delete Account");
-        deleteButton.setPrefSize(100,20);
+        Button deleteButton = new Button("Delete Account");
+        deleteButton.setPrefSize(100, 20);
         Label deleteErr = new Label();
         VBox deleteBox = new VBox();
         deleteBox.getChildren().addAll(deleteButton, deleteErr);
 
+
         Button modifyButton = new Button ("Modify Account");
         modifyButton.setPrefSize(100,20);
+
         Label modifyErr = new Label();
         VBox modifyBox = new VBox();
         modifyBox.getChildren().addAll(modifyButton, modifyErr);
@@ -99,7 +102,8 @@ public class SceneAccountGUI extends Application {
         right.getChildren().addAll(tvAccount);
 
         user.getHashMap().forEach((key, value) -> {
-            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
+//            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
+            Account account = ((EncryptedAccount) value).decryptAccount(user.getKeyPass());
             accountList.add(account);
         });
 
@@ -215,11 +219,17 @@ public class SceneAccountGUI extends Application {
         return action.get() == ButtonType.OK;
     }
 
-   /**
+    public void textFieldsToVoid(TextField userName, TextField pw, TextField appName) {
+        userName.setText("");
+        pw.setText("");
+        appName.setText("");
+    }
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

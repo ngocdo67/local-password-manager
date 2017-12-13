@@ -27,13 +27,7 @@ public class BasicPasswordGenerator implements PasswordGenerator {
 
     }
 
-    /**
-     * This method creates a random password that contains at least one lowercase letter, uppercase letter,
-     * number, and special character.
-     *
-     * @param length the length of the password
-     * @return String    the new password.
-     */
+    @Override
     public String executeDefault(int length) throws PasswordGeneratorException {
         if (length <= 8) {
             throw new PasswordGeneratorException("Invalid length");
@@ -44,13 +38,6 @@ public class BasicPasswordGenerator implements PasswordGenerator {
         return newPassword.toString();
     }
 
-    /**
-     * This method appends strings of different types, e.g. uppercase, lowercase, to one initially empty string.
-     *
-     * @param length  length of the final string
-     * @param lengths an array that contains the length for each type in the final string
-     * @return the string that contains different types of randomly generated string in order.
-     */
     private StringBuilder appendSimplePasswords(int length, int[] lengths) {
         StringBuilder originalPassword = new StringBuilder(length);
         originalPassword.append(generateLowercase(lengths[LOWER_CASE]))
@@ -60,13 +47,6 @@ public class BasicPasswordGenerator implements PasswordGenerator {
         return originalPassword;
     }
 
-    /**
-     * This method shuffles the ordered passwords after the appending process.
-     *
-     * @param length           the length of the password
-     * @param originalPassword the original ordered password
-     * @return the shuffled password.
-     */
     private StringBuilder shuffleSimplePasswords(int length, StringBuilder originalPassword) {
         Random random = new Random();
         StringBuilder newPassword = new StringBuilder(length);
@@ -78,13 +58,6 @@ public class BasicPasswordGenerator implements PasswordGenerator {
         return newPassword;
     }
 
-    /**
-     * This method builds the array that contains the number of lowercase, uppercase,
-     * special characters, numbers in the password.
-     *
-     * @param length length of the password
-     * @return the array of lengths.
-     */
     private int[] buildLength(int length) {
         int[] lengths = new int[4];
         int generatedLengths = 0;
@@ -96,12 +69,6 @@ public class BasicPasswordGenerator implements PasswordGenerator {
         return lengths;
     }
 
-    /**
-     * This method generates the length for each component given the length of the whole password.
-     *
-     * @param length length of the password
-     * @return number of a character in a specific type in the password.
-     */
     private int generateTypeLength(int length) {
         int typeForLength = 0;
         Random random = new Random();
@@ -111,52 +78,23 @@ public class BasicPasswordGenerator implements PasswordGenerator {
         return typeForLength;
     }
 
-    /**
-     * This method generates passwords that only contains lower case characters.
-     *
-     * @param length length of the password
-     * @return String a password consisting of only lower case characters.
-     */
+
     private String generateLowercase(int length) {
         return generateSimplePassword(length, 'a', 'z');
     }
 
-    /**
-     * This method generates passwords that only contains upper case characters.
-     *
-     * @param length length of the password
-     * @return String a password consisting of only upper case characters.
-     */
     private String generateUppercase(int length) {
         return generateSimplePassword(length, 'A', 'Z');
     }
 
-    /**
-     * This method generates passwords that only contains numbers.
-     *
-     * @param length length of the password
-     * @return String a password consisting of only numbers.
-     */
     private String generateNumber(int length) {
         return generateSimplePassword(length, '0', '9');
     }
 
-    /**
-     * This method generates passwords that only contains special characters.
-     *
-     * @param length length of the password
-     * @return String a password consisting of only special characters.
-     */
     private String generateSpecialCharacter(int length) {
         return generateSimplePassword(length, '!', '+');
     }
 
-    /**
-     * This method generates passwords consisting of one type of characters.
-     *
-     * @param length length of the password
-     * @return String a password consisting of one type of characters.
-     */
     private String generateSimplePassword(int length, char firstCharacter, char lastCharacter) {
         String password = null;
         try {
