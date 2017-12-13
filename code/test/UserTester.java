@@ -45,7 +45,7 @@ public class UserTester {
      * This method tests the get method of the user.
      *
      * @param user current user
-     * @return user after accounts are modified.
+     *
      */
     private static void testGetAccount (User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
