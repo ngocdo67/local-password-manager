@@ -20,7 +20,7 @@ public class User {
     private static final String USER_FILE_NAME = "code/resources/user.txt";
     private static final String LOGIN_FILE_NAME = "code/resources/login.txt";
     private String userLogIn, keyPass;
-    private HashMap<String, EncryptedAccount> manager = new HashMap<>();
+    private Map<String, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
     private FileProtector fileProtector;
 
@@ -41,7 +41,7 @@ public class User {
         try {
             BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME));
             if (userFileConverter.doesFileExist() && br.readLine() != null) {
-                HashMap<String, EncryptedAccount> original = userFileConverter.deserialize();
+                Map<String, EncryptedAccount> original = userFileConverter.deserialize();
                 manager = original == null ? new HashMap<>() : original;
             }
         } catch (IOException e) {
@@ -205,7 +205,6 @@ public class User {
             System.out.println("Cannot modify this account");
             return false;
         }
-
     }
 
     /**

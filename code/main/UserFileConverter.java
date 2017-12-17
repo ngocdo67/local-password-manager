@@ -1,6 +1,7 @@
 package main;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This interface defines method signatures for user file converter.
@@ -14,7 +15,7 @@ public interface UserFileConverter {
      *
      * @param encryptedAccounts hash map of encrypted accounts
      */
-    public void serialize(HashMap<String, EncryptedAccount> encryptedAccounts);
+    public void serialize(Map<String, EncryptedAccount> encryptedAccounts);
 
     /**
      * Deserializes a file into a hash map.
@@ -22,7 +23,7 @@ public interface UserFileConverter {
      *
      * @return HashMap hash map of encrypted accounts
      */
-    public HashMap<String, EncryptedAccount> deserialize();
+    public Map<String, EncryptedAccount> deserialize();
 
     /**
      * Checks if a file exists.
