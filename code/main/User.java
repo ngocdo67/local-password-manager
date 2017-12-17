@@ -4,9 +4,7 @@ package main;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +22,7 @@ public class User {
     private String userLogIn, keyPass;
     private HashMap<String, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
+    private FileProtector fileProtector;
 
     /**
      * Construct a new user instance
@@ -37,7 +36,8 @@ public class User {
             this.keyPass = hash(keyPass);
             writeLoginFile();
         }
-        userFileConverter = new UserFileConverter(USER_FILE_NAME);
+        userFileConverter = new BasicUserFileConverter(USER_FILE_NAME);
+        fileProtector = new AesCbcModeFileProtector(keyPass);
         try {
             BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME));
             if (userFileConverter.doesFileExist() && br.readLine() != null) {
@@ -84,15 +84,6 @@ public class User {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Error reading user log in from file", e);
         }
         return readSuccess;
-    }
-
-    /**
-     * Get the hashed key pass
-     *
-     * @return hashed key pass.
-     */
-    public String getKeyPass() {
-        return keyPass;
     }
 
     /**
@@ -149,7 +140,7 @@ public class User {
         if (newEntry == null || newEntry.isInvalid()) return false;
         String id = generateID();
         newEntry.setId(id);
-        EncryptedAccount newEncryptedEntry = newEntry.encryptAccount(keyPass);
+        EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
         if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
@@ -181,17 +172,8 @@ public class User {
      */
     public void displayManager() {
         for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            System.out.println("Key: " + account.getKey() + " Value: " + account.getValue().decryptAccount(keyPass));
+            System.out.println("Key: " + account.getKey() + " Value: " + fileProtector.decrypt(account.getValue()));
         }
-    }
-
-    /**
-     * This returns the hash map of all keys
-     *
-     * @return hash map of all keys.
-     */
-    public HashMap getHashMap() {
-        return manager;
     }
 
     /**
@@ -202,7 +184,7 @@ public class User {
      */
     public Account getAccount(String userID) {
         if (manager.get(userID) != null) {
-            return manager.get(userID).decryptAccount(keyPass);
+            return fileProtector.decrypt(manager.get(userID));
         }
         return null;
     }
@@ -216,7 +198,7 @@ public class User {
     public boolean modifyAccount(String id, Account newEntry) {
         if (manager.containsKey(id)) {
             newEntry.setId(id);
-            manager.put(id, newEntry.encryptAccount(keyPass));
+            manager.put(id, fileProtector.encrypt(newEntry));
             userFileConverter.serialize(manager);
             return true;
         } else {
@@ -239,7 +221,7 @@ public class User {
         }
         EncryptedAccount encryptedAcc = manager.remove(id);
         userFileConverter.serialize(manager);
-        return encryptedAcc.decryptAccount(keyPass);
+        return fileProtector.decrypt(encryptedAcc);
     }
 
     /**
@@ -248,5 +230,18 @@ public class User {
     public void deleteAllAccount() {
         manager = new HashMap<>();
         userFileConverter.serialize(manager);
+    }
+
+    /**
+     * Get a list of all plain accounts.
+     *
+     * @return a list of all plain accounts.
+     */
+    public List<Account> getPlainAccounts() {
+        List<Account> accounts = new ArrayList<>(manager.size());
+        for (EncryptedAccount encryptedAccount : manager.values()) {
+            accounts.add(fileProtector.decrypt(encryptedAccount));
+        }
+        return accounts;
     }
 }

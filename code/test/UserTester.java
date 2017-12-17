@@ -1,7 +1,7 @@
 package test;
 
-import main.User;
 import main.Account;
+import main.User;
 
 public class UserTester {
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class UserTester {
         return user;
     }
 
-    private static void testGetAccount (User user) {
+    private static void testGetAccount(User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
         Account account = user.getAccount("0");
         if (account != null)

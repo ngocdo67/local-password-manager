@@ -77,7 +77,7 @@ public class SceneAccountGUI extends Application {
 
         left.getChildren().addAll(vbox);
 
-        TableView<Account> tvAccount = new TableView<Account>(accountList);
+        TableView<Account> tvAccount = new TableView<>(accountList);
 
         TableColumn<Account, String> uName = new TableColumn<>("User Name");
         uName.setCellValueFactory(new PropertyValueFactory<>("Username"));
@@ -95,12 +95,10 @@ public class SceneAccountGUI extends Application {
 
         right.getChildren().addAll(tvAccount);
 
-        user.getHashMap().forEach((key, value) -> {
-//            Account account = new Account ((EncryptedAccount)value, user.getKeyPass());
-            Account account = ((EncryptedAccount) value).decryptAccount(user.getKeyPass());
+
+        user.getPlainAccounts().forEach(account -> {
             accountList.add(account);
         });
-
         primaryStage.setTitle("Password Protector");
         primaryStage.setScene(scene);
         primaryStage.show();

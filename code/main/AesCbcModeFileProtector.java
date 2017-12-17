@@ -45,7 +45,28 @@ public class AesCbcModeFileProtector implements FileProtector {
     }
 
     @Override
-    public byte[] encrypt(String plainText) {
+    public EncryptedAccount encrypt(Account account) {
+        if (account == null || account.isInvalid()) {
+            return null;
+        }
+        return new EncryptedAccount(encrypt(account.getId()),
+                encrypt(account.getUsername()),
+                encrypt(account.getPassword()),
+                encrypt(account.getAppname()));
+    }
+
+    @Override
+    public Account decrypt(EncryptedAccount account) {
+        if (account == null) {
+            return null;
+        }
+        return new Account(decrypt(account.getId()),
+                decrypt(account.getUsername()),
+                decrypt(account.getPassword()),
+                decrypt(account.getAppname()));
+    }
+
+    private byte[] encrypt(String plainText) {
         if (plainText == null) {
             return null;
         }
@@ -58,8 +79,7 @@ public class AesCbcModeFileProtector implements FileProtector {
         return encrypted;
     }
 
-    @Override
-    public String decrypt(byte[] encrypted) {
+    private String decrypt(byte[] encrypted) {
         if (encrypted == null) {
             return null;
         }

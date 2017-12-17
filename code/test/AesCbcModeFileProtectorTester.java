@@ -1,6 +1,8 @@
 package test;
 
+import main.Account;
 import main.AesCbcModeFileProtector;
+import main.EncryptedAccount;
 import main.FileProtector;
 
 /**
@@ -14,48 +16,48 @@ public class AesCbcModeFileProtectorTester {
     public static void main(String[] args) {
         System.out.println("\n---Valid plain text---\n");
         testValidCipher();
-        System.out.println ("\n---Valid plain text when key pass is too short---\n");
+        System.out.println("\n---Valid plain text when key pass is too short---\n");
         testValidCipherWhenKeyPassIsTooShort();
-        System.out.println ("\n---Valid plain text with specified key pass---\n");
+        System.out.println("\n---Valid plain text with specified key pass---\n");
         testValidCipherWhenSpecifiedKeyPass();
         System.out.println("\n---Null plain text---\n");
         testNullCipher();
     }
 
-    /**
-     * This method tests the encryption and decryption of valid plain text.
-     */
     private static void testValidCipher() {
-        String plainText = "This is a test string";
         FileProtector fileProtector = new AesCbcModeFileProtector();
-        byte[] encrypted = fileProtector.encrypt(plainText);
-        String decrypted = fileProtector.decrypt(encrypted);
-        System.out.println("Encrypted: " + (encrypted == null ? null : new String(encrypted)) + "\nDecrypted: " + decrypted);
+        Account account = new Account("apple", "orange", "watermelon");
+        account.setId("1");
+        EncryptedAccount encryptedAccount = fileProtector.encrypt(account);
+        Account decryptedAccount = fileProtector.decrypt(encryptedAccount);
+        System.out.println("Account before: " + account.toString() + "\nAccount after: " + decryptedAccount.toString());
     }
 
     private static void testValidCipherWhenKeyPassIsTooShort() {
-        String plainText = "This is a test string";
         FileProtector fileProtector = new AesCbcModeFileProtector("abc");
-        byte[] encrypted = fileProtector.encrypt(plainText);
-        String decrypted = fileProtector.decrypt(encrypted);
-        System.out.println("Encrypted: " + (encrypted == null ? null : new String(encrypted)) + "\nDecrypted: " + decrypted);
+        Account account = new Account("apple", "orange", "watermelon");
+        account.setId("1");
+        EncryptedAccount encryptedAccount = fileProtector.encrypt(account);
+        Account decryptedAccount = fileProtector.decrypt(encryptedAccount);
+        System.out.println("Account before: " + account.toString() + "\nAccount after: " + decryptedAccount.toString());
     }
 
     private static void testValidCipherWhenSpecifiedKeyPass() {
-        String plainText = "This is a test string";
-        FileProtector fileProtector = new AesCbcModeFileProtector("u9hioauhuiewouhfuweiofheuaioefhuaefoheuwiofehu");
-        byte[] encrypted = fileProtector.encrypt(plainText);
-        String decrypted = fileProtector.decrypt(encrypted);
-        System.out.println("Encrypted: " + (encrypted == null ? null : new String(encrypted)) + "\nDecrypted: " + decrypted);
+        FileProtector fileProtector = new AesCbcModeFileProtector("aweuhfwueihfauwifhwiuefahuwiefheuwaipfehuwapfhuewapf");
+        Account account = new Account("apple", "orange", "watermelon");
+        account.setId("1");
+        EncryptedAccount encryptedAccount = fileProtector.encrypt(account);
+        Account decryptedAccount = fileProtector.decrypt(encryptedAccount);
+        System.out.println("Account before: " + account.toString() + "\nAccount after: " + decryptedAccount.toString());
     }
-    /**
-     * This method tests the encryption and decryption of null plain text.
-     */
+
     private static void testNullCipher() {
         FileProtector fileProtector = new AesCbcModeFileProtector();
-        byte[] encrypted = fileProtector.encrypt(null);
-        String decrypted = fileProtector.decrypt(encrypted);
-        System.out.println("Encrypted: " + (encrypted == null ? null : new String(encrypted)) + "\nDecrypted: " + decrypted);
+        EncryptedAccount account = fileProtector.encrypt(null);
+        Account decryptedAccount = fileProtector.decrypt(account);
+        String accountString = account == null ? null : account.toString();
+        String decryptedAccountString = decryptedAccount == null ? null : decryptedAccount.toString();
+        System.out.println("Account before: " + accountString + "\nAccount after: " + decryptedAccountString);
     }
 
 }
