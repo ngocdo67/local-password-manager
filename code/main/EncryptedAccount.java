@@ -61,6 +61,11 @@ public class EncryptedAccount implements Serializable {
         return this.id;
     }
 
+    public boolean isInvalid () {
+        return id == null || id.length == 0 || userName == null || userName.length == 0
+                || password == null || password.length == 0 || appName == null || appName.length == 0;
+    }
+
     @Override
     public String toString() {
         return "ID: " + new String(id) + " Username: " + new String(userName) + ", password: " + new String(password) + ", application: " + new String(appName);

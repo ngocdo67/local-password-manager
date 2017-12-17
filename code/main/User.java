@@ -149,9 +149,9 @@ public class User {
     }
 
     private boolean isNewEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
-        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername())
-                    && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
+        for (EncryptedAccount account : manager.values()) {
+            if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
+            && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())) {
                 return true;
             }
         }
@@ -196,13 +196,13 @@ public class User {
      * @param newEntry is the new account
      */
     public boolean modifyAccount(String id, Account newEntry) {
-        if (manager.containsKey(id)) {
+        if (manager.containsKey(id) && !newEntry.isInvalid()) {
             newEntry.setId(id);
             manager.put(id, fileProtector.encrypt(newEntry));
             userFileConverter.serialize(manager);
             return true;
         } else {
-            System.out.println("This ID does not exist!");
+            System.out.println("Cannot modify this account");
             return false;
         }
 
