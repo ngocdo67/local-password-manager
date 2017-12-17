@@ -92,7 +92,7 @@ public class User {
      * @param passwordToHash the keyPass that needs to be hashed
      * @return hashPassword the hashed password
      */
-    public String hash(String passwordToHash) {
+    private String hash(String passwordToHash) {
         String hashPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
