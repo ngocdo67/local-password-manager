@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main;
 
 import javafx.application.Application;
@@ -21,8 +16,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
+ * The PasswordProtectorGUI program creates a login screen
  *
- * @author ha
+ * @author Group 3
+ * @version 1.1
+ * @since 2017-10-05
+ * @since 2017-10-12
  */
 public class PasswordProtectorGUI extends Application {
 	private LogIn login = new LogIn();

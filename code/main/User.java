@@ -199,7 +199,7 @@ public class User {
         if (manager.containsKey(id) && newEntry != null && !newEntry.isInvalid()) {
             newEntry.setId(id);
             EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
-            if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) {
+            if (!isNewEncryptedEntryDuplicate(newEncryptedEntry)) {
                 manager.put(id, fileProtector.encrypt(newEntry));
                 userFileConverter.serialize(manager);
                 return true;
