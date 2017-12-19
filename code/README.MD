@@ -2,18 +2,18 @@
 
 ## System Test:
 
-To start the desktop application, compile all the files in the "Main" directory. Then run
-    SceneAccountGui.java
-to test the core functionalities such as add, delete and modify accounts.
-
-Run
+Import the project to IntelliJ. Then run
     LogInGui.java
 to test log in with the user name: User and password: Password.
+The correct username and password should lead users to the SceneAccountGui
+or you can run the
+   SceneAccountGui.java
+to test the core functionalities such as add, delete and modify accounts.
 
 
 
 ## Component Test:
-To test various components, please go to the directory "Test" and run each test.
+To test various components, please go to the directory "test" and run each Tester class.
 
 
 
