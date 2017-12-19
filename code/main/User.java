@@ -215,7 +215,8 @@ public class User {
 
     private boolean isModifiedEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
         for (EncryptedAccount account : manager.values()) {
-            if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
+            if (account != null && !account.isInvalid() && !Arrays.equals(account.getId(), newEncryptedEntry.getId())
+                    && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
                     && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())
                     && Arrays.equals(account.getPassword(), newEncryptedEntry.getAppname())) {
                 return true;
@@ -227,7 +228,9 @@ public class User {
 
     private boolean isPasswordDuplicate (EncryptedAccount newEncryptedEntry) {
         for (EncryptedAccount account : manager.values()) {
-            if (account != null && !account.isInvalid() && Arrays.equals(account.getPassword(), newEncryptedEntry.getPassword())) {
+            if (account != null && !account.isInvalid()
+                    && !Arrays.equals(account.getId(), newEncryptedEntry.getId())
+                    && Arrays.equals(account.getPassword(), newEncryptedEntry.getPassword())) {
                 return true;
             }
         }
