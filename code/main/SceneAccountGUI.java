@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package main;
 
 import javafx.application.Application;
@@ -14,9 +10,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.util.Optional;
 
+/**
+ * The SceneAccountGUI program creates a screen for all accounts in which user can modify, delete, add accounts
+ *
+ * @author Group 3
+ * @version 1.1
+ * @since 2017-10-05
+ * @since 2017-10-12
+ */
 
 public class SceneAccountGUI extends Application {
 
@@ -32,17 +35,15 @@ public class SceneAccountGUI extends Application {
     private Button addButton = new Button("Add Account");
     private Button modifyButton = new Button ("Modify Account");
     private Button deleteButton = new Button ("Delete Account");
-    private Label addDuplicate = new Label();
     private VBox addBox = new VBox();
-    private Label deleteErr = new Label();
     private VBox deleteBox = new VBox();
-    private Label modifyErr = new Label();
     private VBox modifyBox = new VBox();
+    private Label addDuplicate = new Label();
+    private Label deleteErr = new Label();
+    private Label modifyErr = new Label();
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene;
-        SplitPane root;
         root = new SplitPane();
         VBox left = new VBox();
         VBox right = new VBox();
@@ -51,11 +52,12 @@ public class SceneAccountGUI extends Application {
         root.getItems().addAll(left, right);
         root.setDividerPosition(0, 0.45);
 
+        Scene scene = new Scene(root, 800, 800);
+
         right.setSpacing(5);
         right.setPadding(new Insets(10, 10, 10, 10));
         left.setSpacing(5);
         left.setPadding(new Insets(10, 10, 10, 10));
-        scene = new Scene(root, 800, 800);
 
         createButton(addButton, addDuplicate, addBox);
         createButton(deleteButton, deleteErr, deleteBox);
@@ -67,19 +69,15 @@ public class SceneAccountGUI extends Application {
         autoPw.setText("Automatically generate password");
         selfPw.setText("Set password yourself");
 
-        Label password = new Label("Password: ");
+        Label password = new Label("Password:");
         pwBox = new PasswordField();
         pwBox.setEditable(false);
 
         Label appName = new Label("Application:");
         appTextField = new TextField();
 
-        VBox vbox = new VBox();
-        vbox.setSpacing(30);
-
-        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox, modifyBox);
-
-        left.getChildren().addAll(vbox);
+        VBox functionBox = new VBox();
+        functionBox.setSpacing(30);
 
         TableView<Account> tvAccount = new TableView<>(accountList);
         TableColumn<Account, String> uName = new TableColumn<>("User Name");
@@ -93,14 +91,16 @@ public class SceneAccountGUI extends Application {
         tvAccount.getColumns().addAll(uName, pw, aName);
         tvAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tvAccount.setPrefWidth(300);
-        tvAccount.setPrefHeight(700);
+        tvAccount.setPrefHeight(800);
 
+        functionBox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox, modifyBox);
         right.getChildren().addAll(tvAccount);
-
+        left.getChildren().addAll(functionBox);
 
         user.getPlainAccounts().forEach(account -> {
             accountList.add(account);
         });
+
         primaryStage.setTitle("Password Protector");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -142,34 +142,19 @@ public class SceneAccountGUI extends Application {
         });
     }
 
-    private void inputToVoid(TextField userName, TextField pw, TextField appName) {
-        userName.setText("");
-        pw.setText("");
-        appName.setText("");
-        autoPw.setSelected(false);
-        selfPw.setSelected(false);
-    }
-
-    private Account pwOption (CheckBox autoPw, CheckBox selfPw) {
-        Account newItem;
-        if (autoPw.isSelected())
-            newItem = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
-        else if (selfPw.isSelected())
-            newItem = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
+    private void addAccountAction(CheckBox autoPw, CheckBox selfPw, Label addDuplicate, Label deleteErr, Label modifyErr, TextField userTextField, PasswordField pwBox, TextField appTextField) {
+        Account acc = pwOption(autoPw, selfPw);
+        if (user.addAccount(acc)) {
+            accountList.add(acc);
+            addDuplicate.setText("");
+        }
         else
-            newItem = new Account ("","","");
-        return newItem;
+            addDuplicate.setText("You cannot add a duplicated or blank account");
+        inputToVoid(userTextField,pwBox,appTextField);
+        deleteErr.setText("");
+        modifyErr.setText("");
     }
 
-    private boolean alertMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to permanently " + message + " this account?");
-        Optional<ButtonType> action = alert.showAndWait();
-        return action.get() == ButtonType.OK;
-
-    }
     private void modifyAccountAction(CheckBox autoPw, CheckBox selfPw, Label addDuplicate, Label deleteErr, Label modifyErr, TextField userTextField, PasswordField pwBox, TextField appTextField, TableView<Account> tvAccount) {
             selfPw.setSelected(true);
             Account modifiedItem  = tvAccount.getSelectionModel().getSelectedItem();
@@ -210,26 +195,23 @@ public class SceneAccountGUI extends Application {
         addDuplicate.setText("");
     }
 
-    private void addAccountAction(CheckBox autoPw, CheckBox selfPw, Label addDuplicate, Label deleteErr, Label modifyErr, TextField userTextField, PasswordField pwBox, TextField appTextField) {
-        Account acc = pwOption(autoPw, selfPw);
-        if (user.addAccount(acc)) {
-            accountList.add(acc);
-            addDuplicate.setText("");
-        }
+    private Account pwOption (CheckBox autoPw, CheckBox selfPw) {
+        Account newItem;
+        if (autoPw.isSelected())
+            newItem = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
+        else if (selfPw.isSelected())
+            newItem = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
         else
-            addDuplicate.setText("You cannot add a duplicated or blank account");
-        userTextField.setText("");
-        pwBox.setText("");
-        appTextField.setText("");
-        inputToVoid(userTextField,pwBox,appTextField);
-        deleteErr.setText("");
-        modifyErr.setText("");
+            newItem = new Account ("","","");
+        return newItem;
     }
 
-    public void textFieldsToVoid(TextField userName, TextField pw, TextField appName) {
+    private void inputToVoid(TextField userName, TextField pw, TextField appName) {
         userName.setText("");
         pw.setText("");
         appName.setText("");
+        autoPw.setSelected(false);
+        selfPw.setSelected(false);
     }
 
     public static void createButton(Button button, Label label, VBox vBox) {
@@ -237,7 +219,14 @@ public class SceneAccountGUI extends Application {
         vBox.getChildren().addAll(button, label);
     }
 
-
+    private boolean alertMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to permanently " + message + " this account?");
+        Optional<ButtonType> action = alert.showAndWait();
+        return action.get() == ButtonType.OK;
+    }
 
     /**
      * @param args the command line arguments
