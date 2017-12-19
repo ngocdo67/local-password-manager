@@ -2,14 +2,21 @@
 package main;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
+import javax.swing.text.StyledEditorKit;
 import java.util.Optional;
 
 /**
@@ -17,7 +24,6 @@ import java.util.Optional;
  *
  * @author Group 3
  * @version 1.1
- * @since 2017-10-05
  * @since 2017-10-12
  */
 
@@ -70,6 +76,7 @@ public class SceneAccountGUI extends Application {
         createButton(modifyButton, modifyError, modifyBox);
 
         Label userName = new Label("User Name:");
+        userName.setFont(Font.font(null, FontWeight.BOLD, 15));
         userTextField = new TextField();
 
         autoPassword.setText("Automatically generate password");
@@ -78,16 +85,27 @@ public class SceneAccountGUI extends Application {
         Label passwordLengthLabel = new Label("Password Length (must be longer than 8): ");
         passwordLengthTextField = new TextField();
         passwordLengthTextField.setEditable(false);
+        passwordLengthTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    passwordLengthTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
 
         Label password = new Label("Password: ");
+        password.setFont(Font.font(null, FontWeight.BOLD, 15));
         passwordField = new PasswordField();
         passwordField.setEditable(false);
 
         Label appName = new Label("Application:");
+        appName.setFont(Font.font(null, FontWeight.BOLD, 15));
         appTextField = new TextField();
 
         VBox vbox = new VBox();
-        vbox.setSpacing(25);
+        vbox.setSpacing(20);
 
         vbox.getChildren().addAll(userName, userTextField, password, autoPassword, passwordLengthLabel, passwordLengthTextField, selfPassword, passwordField, appName, appTextField, addBox, deleteBox, modifyBox);
 
@@ -148,7 +166,7 @@ public class SceneAccountGUI extends Application {
 
     private void addAccountAction(CheckBox autoPassword, CheckBox selfPassword, Label addDuplicate, Label deleteErr, Label modifyErr, TextField userTextField, PasswordField pwBox, TextField appTextField) {
         deleteErrorMessage();
-        Account acc = pwOption(autoPassword, selfPassword);
+        Account acc = createAccount(autoPassword, selfPassword);
         if (user.addAccount(acc)) {
             accountList.add(acc);
             addDuplicate.setText("");
@@ -160,9 +178,11 @@ public class SceneAccountGUI extends Application {
     private void selectOneTableItem(TableView<Account> tvAccount) {
         deleteErrorMessage();
         Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
-        userTextField.setText(selectedItem.getUsername());
-        passwordField.setText(selectedItem.getPassword());
-        appTextField.setText(selectedItem.getAppname());
+        if (selectedItem != null) {
+            userTextField.setText(selectedItem.getUsername());
+            passwordField.setText(selectedItem.getPassword());
+            appTextField.setText(selectedItem.getAppname());
+        }
     }
 
     private void activateAutoPassword() {
@@ -170,6 +190,7 @@ public class SceneAccountGUI extends Application {
             passwordField.setEditable(false);
             passwordField.setText("");
             selfPassword.setSelected(false);
+            passwordLengthTextField.setEditable(true);
         }
     }
 
@@ -201,7 +222,7 @@ public class SceneAccountGUI extends Application {
         selfPw.setSelected(true);
             Account modifiedItem  = tvAccount.getSelectionModel().getSelectedItem();
             if (modifiedItem != null) {
-                Account newItem = pwOption(autoPw, selfPw);
+                Account newItem = createAccount(autoPw, selfPw);
                 if (user.modifyAccount(modifiedItem.getId(), newItem)) {
                     if (alertMessage("modify")) {
                         tvAccount.getItems().set(accountList.indexOf(modifiedItem), newItem);
@@ -238,14 +259,18 @@ public class SceneAccountGUI extends Application {
         addDuplicate.setText("");
     }
 
-    private Account pwOption (CheckBox autoPassword, CheckBox selfPassword) {
-        Account newItem;
-        if (autoPassword.isSelected())
-            newItem = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
-        else if (selfPassword.isSelected())
+    private Account createAccount(CheckBox autoPassword, CheckBox selfPassword) {
+        Account newItem = new Account("", "", "");
+        if (autoPassword.isSelected()) {
+            String passwordLengthInput = passwordLengthTextField.getText();
+            int passwordLength = Integer.parseInt(passwordLengthInput);
+            if (passwordLength >= 8) {
+                newItem = new Account(userTextField.getText().trim(), passwordLength, appTextField.getText().trim());
+            }
+        }
+        else if (selfPassword.isSelected()) {
             newItem = new Account(userTextField.getText().trim(), passwordField.getText().trim(), appTextField.getText().trim());
-        else
-            newItem = new Account ("","","");
+        }
         return newItem;
     }
 
