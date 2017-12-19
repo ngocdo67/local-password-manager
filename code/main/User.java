@@ -158,6 +158,8 @@ public class User {
         return false;
     }
 
+
+
     private String generateID() {
         Random random = new Random();
         int id = random.nextInt(manager.size() + 1);
@@ -199,13 +201,24 @@ public class User {
         if (manager.containsKey(id) && newEntry != null && !newEntry.isInvalid()) {
             newEntry.setId(id);
             EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
-            if (!isNewEncryptedEntryDuplicate(newEncryptedEntry)) {
+            if (!isModifiedEncryptedEntryDuplicate(newEncryptedEntry)) {
                 manager.put(id, fileProtector.encrypt(newEntry));
                 userFileConverter.serialize(manager);
                 return true;
             }
         } else {
             System.out.println("Cannot modify this account");
+        }
+        return false;
+    }
+
+    private boolean isModifiedEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
+        for (EncryptedAccount account : manager.values()) {
+            if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
+                    && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())
+                    && Arrays.equals(account.getPassword(), newEncryptedEntry.getAppname())) {
+                return true;
+            }
         }
         return false;
     }
