@@ -136,9 +136,11 @@ public class SceneAccountGUI extends Application {
 
         tvAccount.setOnMouseClicked(event -> {
             Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
-            userTextField.setText(selectedItem.getUsername());
-            pwBox.setText(selectedItem.getPassword());
-            appTextField.setText(selectedItem.getAppname());
+            if (selectedItem != null) {
+                userTextField.setText(selectedItem.getUsername());
+                pwBox.setText(selectedItem.getPassword());
+                appTextField.setText(selectedItem.getAppname());
+            }
         });
     }
 

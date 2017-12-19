@@ -196,15 +196,18 @@ public class User {
      * @param newEntry is the new account
      */
     public boolean modifyAccount(String id, Account newEntry) {
-        if (manager.containsKey(id) && !newEntry.isInvalid()) {
+        if (manager.containsKey(id) && newEntry != null && !newEntry.isInvalid()) {
             newEntry.setId(id);
-            manager.put(id, fileProtector.encrypt(newEntry));
-            userFileConverter.serialize(manager);
-            return true;
+            EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
+            if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) {
+                manager.put(id, fileProtector.encrypt(newEntry));
+                userFileConverter.serialize(manager);
+                return true;
+            }
         } else {
             System.out.println("Cannot modify this account");
-            return false;
         }
+        return false;
     }
 
     /**
