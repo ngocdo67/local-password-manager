@@ -20,23 +20,21 @@ import java.util.Optional;
 
 public class SceneAccountGUI extends Application {
 
+    private User user = new User("User", "Password");
+    private ObservableList<Account> accountList = FXCollections.observableArrayList();
     private TextField userTextField;
     private TextField appTextField;
-    private PasswordField pwBox;
-    private CheckBox autoPw;
-    private CheckBox selfPw;
-
-    private User user = new User("User", "Password");
-    private SplitPane root;
-    private ObservableList<Account> accountList = FXCollections.observableArrayList();
+    private PasswordField passwordField;
+    private CheckBox autoPassword;
+    private CheckBox selfPassword;
     private Button addButton = new Button("Add Account");
     private Button modifyButton = new Button ("Modify Account");
     private Button deleteButton = new Button ("Delete Account");
     private Label addDuplicate = new Label();
     private VBox addBox = new VBox();
-    private Label deleteErr = new Label();
+    private Label deleteError = new Label();
     private VBox deleteBox = new VBox();
-    private Label modifyErr = new Label();
+    private Label modifyError = new Label();
     private VBox modifyBox = new VBox();
 
     @Override
@@ -46,8 +44,8 @@ public class SceneAccountGUI extends Application {
         root = new SplitPane();
         VBox left = new VBox();
         VBox right = new VBox();
-        autoPw = new CheckBox();
-        selfPw = new CheckBox();
+        autoPassword = new CheckBox();
+        selfPassword = new CheckBox();
         root.getItems().addAll(left, right);
         root.setDividerPosition(0, 0.45);
 
@@ -58,18 +56,18 @@ public class SceneAccountGUI extends Application {
         scene = new Scene(root, 800, 800);
 
         createButton(addButton, addDuplicate, addBox);
-        createButton(deleteButton, deleteErr, deleteBox);
-        createButton(modifyButton, modifyErr, modifyBox);
+        createButton(deleteButton, deleteError, deleteBox);
+        createButton(modifyButton, modifyError, modifyBox);
 
         Label userName = new Label("User Name:");
         userTextField = new TextField();
 
-        autoPw.setText("Automatically generate password");
-        selfPw.setText("Set password yourself");
+        autoPassword.setText("Automatically generate password");
+        selfPassword.setText("Set password yourself");
 
         Label password = new Label("Password: ");
-        pwBox = new PasswordField();
-        pwBox.setEditable(false);
+        passwordField = new PasswordField();
+        passwordField.setEditable(false);
 
         Label appName = new Label("Application:");
         appTextField = new TextField();
@@ -77,7 +75,7 @@ public class SceneAccountGUI extends Application {
         VBox vbox = new VBox();
         vbox.setSpacing(30);
 
-        vbox.getChildren().addAll(userName, userTextField, password, autoPw, selfPw, pwBox, appName, appTextField, addBox, deleteBox, modifyBox);
+        vbox.getChildren().addAll(userName, userTextField, password, autoPassword, selfPassword, passwordField, appName, appTextField, addBox, deleteBox, modifyBox);
 
         left.getChildren().addAll(vbox);
 
@@ -90,10 +88,7 @@ public class SceneAccountGUI extends Application {
         pw.setCellValueFactory(new PropertyValueFactory<>("password"));
         aName.setCellValueFactory(new PropertyValueFactory<>("Appname"));
 
-        tvAccount.getColumns().addAll(uName, pw, aName);
-        tvAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tvAccount.setPrefWidth(300);
-        tvAccount.setPrefHeight(700);
+        setUpTableViewAccount(tvAccount, uName, pw, aName);
 
         right.getChildren().addAll(tvAccount);
 
@@ -105,49 +100,72 @@ public class SceneAccountGUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        selfPw.setOnAction(event ->
+        setOnActionForButtons(tvAccount);
+    }
+
+    private void setOnActionForButtons(TableView<Account> tvAccount) {
+        selfPassword.setOnAction(event ->
         {
-            if (selfPw.isSelected()) {
-                pwBox.setEditable(true);
-                autoPw.setSelected(false);
-            }
+            activateSelfPassword();
         });
 
-        autoPw.setOnAction(event ->
+        autoPassword.setOnAction(event ->
         {
-            if (autoPw.isSelected()) {
-                pwBox.setEditable(false);
-                pwBox.setText("");
-                selfPw.setSelected(false);
-            }
+            activateAutoPassword();
         });
 
         addButton.setOnAction(event -> {
-            addAccountAction(autoPw, selfPw, addDuplicate, deleteErr, modifyErr, userTextField, pwBox, appTextField);
+            addAccountAction(autoPassword, selfPassword, addDuplicate, deleteError, modifyError, userTextField, passwordField, appTextField);
         });
 
         deleteButton.setOnAction(event -> {
-            deleteAccountAction(addDuplicate, deleteErr, modifyErr, userTextField, pwBox, appTextField, tvAccount);
+            deleteAccountAction(addDuplicate, deleteError, modifyError, userTextField, passwordField, appTextField, tvAccount);
         });
 
         modifyButton.setOnAction(event -> {
-            modifyAccountAction(autoPw, selfPw, addDuplicate, deleteErr, modifyErr, userTextField, pwBox, appTextField, tvAccount);
+            modifyAccountAction(autoPassword, selfPassword, addDuplicate, deleteError, modifyError, userTextField, passwordField, appTextField, tvAccount);
         });
 
         tvAccount.setOnMouseClicked(event -> {
-            Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
-            userTextField.setText(selectedItem.getUsername());
-            pwBox.setText(selectedItem.getPassword());
-            appTextField.setText(selectedItem.getAppname());
+            selectOneTableItem(tvAccount);
         });
+    }
+
+    private void selectOneTableItem(TableView<Account> tvAccount) {
+        Account selectedItem = tvAccount.getSelectionModel().getSelectedItem();
+        userTextField.setText(selectedItem.getUsername());
+        passwordField.setText(selectedItem.getPassword());
+        appTextField.setText(selectedItem.getAppname());
+    }
+
+    private void activateAutoPassword() {
+        if (autoPassword.isSelected()) {
+            passwordField.setEditable(false);
+            passwordField.setText("");
+            selfPassword.setSelected(false);
+        }
+    }
+
+    private void activateSelfPassword() {
+        if (selfPassword.isSelected()) {
+            passwordField.setEditable(true);
+            autoPassword.setSelected(false);
+        }
+    }
+
+    private void setUpTableViewAccount(TableView<Account> tvAccount, TableColumn<Account, String> uName, TableColumn<Account, String> pw, TableColumn<Account, String> aName) {
+        tvAccount.getColumns().addAll(uName, pw, aName);
+        tvAccount.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tvAccount.setPrefWidth(300);
+        tvAccount.setPrefHeight(700);
     }
 
     private void inputToVoid(TextField userName, TextField pw, TextField appName) {
         userName.setText("");
         pw.setText("");
         appName.setText("");
-        autoPw.setSelected(false);
-        selfPw.setSelected(false);
+        autoPassword.setSelected(false);
+        selfPassword.setSelected(false);
     }
 
     private Account pwOption (CheckBox autoPw, CheckBox selfPw) {
@@ -155,7 +173,7 @@ public class SceneAccountGUI extends Application {
         if (autoPw.isSelected())
             newItem = new Account(userTextField.getText().trim(), 20, appTextField.getText().trim());
         else if (selfPw.isSelected())
-            newItem = new Account(userTextField.getText().trim(), pwBox.getText().trim(), appTextField.getText().trim());
+            newItem = new Account(userTextField.getText().trim(), passwordField.getText().trim(), appTextField.getText().trim());
         else
             newItem = new Account ("","","");
         return newItem;
@@ -226,13 +244,7 @@ public class SceneAccountGUI extends Application {
         modifyErr.setText("");
     }
 
-    public void textFieldsToVoid(TextField userName, TextField pw, TextField appName) {
-        userName.setText("");
-        pw.setText("");
-        appName.setText("");
-    }
-
-    public static void createButton(Button button, Label label, VBox vBox) {
+    private static void createButton(Button button, Label label, VBox vBox) {
         button.setPrefSize(200, 20);
         vBox.getChildren().addAll(button, label);
     }

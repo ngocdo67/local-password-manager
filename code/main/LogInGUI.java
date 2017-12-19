@@ -24,17 +24,14 @@ import javafx.stage.Stage;
  *
  * @author ha
  */
-public class PasswordProtectorGUI extends Application {
+public class LogInGUI extends Application {
 	private LogIn login = new LogIn();
+	private GridPane root = new GridPane();
 
     @Override
     public void start(Stage primaryStage) {
 
-        GridPane root = new GridPane();
-        root.setAlignment(Pos.CENTER);
-        root.setHgap(10);
-        root.setVgap(10);
-        root.setPadding(new Insets(25, 25, 25, 25));
+        setViewForRoot();
 
         Scene scene = new Scene(root, 800, 800);
 
@@ -45,11 +42,7 @@ public class PasswordProtectorGUI extends Application {
         Label pw = new Label("Password: ");
         PasswordField pwBox = new PasswordField();
 
-        root.add(scenetitle, 0, 0, 2, 1);
-        root.add(userName, 0, 1);
-        root.add(userTextField, 1, 1);
-        root.add(pw, 0, 2);
-        root.add(pwBox, 1, 2);
+        addBasicComponentsToRoot(scenetitle, userName, userTextField, pw, pwBox);
 
         root.setGridLinesVisible(false);
 
@@ -61,21 +54,46 @@ public class PasswordProtectorGUI extends Application {
         
         final Text actiontarget = new Text();
         root.add(actiontarget, 1, 6);
-        
-        primaryStage.setTitle("Pa$$w0rd");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        setUpPrimaryStage(primaryStage, scene);
         
         signInButton.setOnAction(event ->
         {
-            SceneAccountGUI sceneAccount = new SceneAccountGUI();
-            if (login.verifyNameAndPassword(userTextField.getText(),pwBox.getText()))
-                sceneAccount.start(primaryStage);
-            else
-                actiontarget.setText("Wrong user name or password");
+            activateSignInButton(primaryStage, userTextField, pwBox, actiontarget);
         }); 
     }
-    
+
+    private void activateSignInButton(Stage primaryStage, TextField userTextField, PasswordField pwBox, Text actiontarget) {
+        SceneAccountGUI sceneAccount = new SceneAccountGUI();
+        if (login.verifyNameAndPassword(userTextField.getText(),pwBox.getText())) {
+            sceneAccount.start(primaryStage);
+        }
+        else {
+            actiontarget.setText("Wrong user name or password");
+        }
+    }
+
+    private void setUpPrimaryStage(Stage primaryStage, Scene scene) {
+        primaryStage.setTitle("Pa$$w0rd");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void addBasicComponentsToRoot(Text scenetitle, Label userName, TextField userTextField, Label pw, PasswordField pwBox) {
+        root.add(scenetitle, 0, 0, 2, 1);
+        root.add(userName, 0, 1);
+        root.add(userTextField, 1, 1);
+        root.add(pw, 0, 2);
+        root.add(pwBox, 1, 2);
+    }
+
+    private void setViewForRoot() {
+        root.setAlignment(Pos.CENTER);
+        root.setHgap(10);
+        root.setVgap(10);
+        root.setPadding(new Insets(25, 25, 25, 25));
+    }
+
     /**
      * @param args the command line arguments
      */
