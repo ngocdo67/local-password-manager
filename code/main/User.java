@@ -152,13 +152,12 @@ public class User {
     private boolean isNewEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
         for (EncryptedAccount account : manager.values()) {
             if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
-            && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())) {
+                    && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())) {
                 return true;
             }
         }
         return false;
     }
-
 
 
     private String generateID() {
@@ -226,7 +225,7 @@ public class User {
     }
 
 
-    private boolean isPasswordDuplicate (EncryptedAccount newEncryptedEntry) {
+    private boolean isPasswordDuplicate(EncryptedAccount newEncryptedEntry) {
         for (EncryptedAccount account : manager.values()) {
             if (account != null && !account.isInvalid()
                     && !Arrays.equals(account.getId(), newEncryptedEntry.getId())
@@ -236,6 +235,7 @@ public class User {
         }
         return false;
     }
+
     /**
      * Gets the account from the manager hashmap and removes the account from the hashmap
      *
