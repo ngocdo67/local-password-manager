@@ -142,6 +142,7 @@ public class User {
         newEntry.setId(id);
         EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
         if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) return false;
+        if (isPasswordDuplicate(newEncryptedEntry)) return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
         System.out.println("Added " + newEntry);
@@ -201,7 +202,7 @@ public class User {
         if (manager.containsKey(id) && newEntry != null && !newEntry.isInvalid()) {
             newEntry.setId(id);
             EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
-            if (!isModifiedEncryptedEntryDuplicate(newEncryptedEntry)) {
+            if (!isModifiedEncryptedEntryDuplicate(newEncryptedEntry) && !isPasswordDuplicate(newEncryptedEntry)) {
                 manager.put(id, fileProtector.encrypt(newEntry));
                 userFileConverter.serialize(manager);
                 return true;
@@ -223,6 +224,15 @@ public class User {
         return false;
     }
 
+
+    private boolean isPasswordDuplicate (EncryptedAccount newEncryptedEntry) {
+        for (EncryptedAccount account : manager.values()) {
+            if (account != null && !account.isInvalid() && Arrays.equals(account.getPassword(), newEncryptedEntry.getPassword())) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Gets the account from the manager hashmap and removes the account from the hashmap
      *

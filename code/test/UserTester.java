@@ -19,7 +19,7 @@ public class UserTester {
     private static User testAddAccount(User user) {
         System.out.println("\n---TEST ADD ACCOUNT---\n");
         Account a = new Account("apple", "fruit", "gmail");
-        Account b = new Account("banana", "fruit", "icloud");
+        Account b = new Account("banana", "fruits", "icloud");
         Account c = new Account("cinnamon", "spice", "amazon");
         Account d = new Account("apple", "ab", "gmail");
         Account e = new Account("orange", 11, "ebay");
