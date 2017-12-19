@@ -196,7 +196,8 @@ public class User {
      * @param newEntry is the new account
      */
     public boolean modifyAccount(String id, Account newEntry) {
-        if (manager.containsKey(id) && !newEntry.isInvalid()) {
+        EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
+        if (manager.containsKey(id) && !newEntry.isInvalid() && !isNewEncryptedEntryDuplicate(newEncryptedEntry)) {
             newEntry.setId(id);
             manager.put(id, fileProtector.encrypt(newEntry));
             userFileConverter.serialize(manager);
