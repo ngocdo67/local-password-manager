@@ -9,18 +9,18 @@ package main;
  */
 public interface FileProtector {
     /**
-     * This encrypts a string.
+     * This encrypts an account
      *
-     * @param plainText plain text in String
-     * @return a byte array of the encrypted string.
+     * @param account plain account with all fields in string
+     * @return encrypted account with all fields in byte array.
      */
-    byte[] encrypt(String plainText);
+    EncryptedAccount encrypt(Account account);
 
     /**
-     * This decrypts a byte array
+     * This decrypts an account
      *
-     * @param encryptedText the encrypted text in byte array
-     * @return decrypted text in string.
+     * @param account encrypted account with all fields in byte array
+     * @return plain account with all fields in string.
      */
-    String decrypt(byte[] encryptedText);
+    Account decrypt(EncryptedAccount account);
 }

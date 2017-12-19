@@ -4,9 +4,7 @@ package main;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +20,9 @@ public class User {
     private static final String USER_FILE_NAME = "code/resources/user.txt";
     private static final String LOGIN_FILE_NAME = "code/resources/login.txt";
     private String userLogIn, keyPass;
-    private HashMap<String, EncryptedAccount> manager = new HashMap<>();
+    private Map<String, EncryptedAccount> manager = new HashMap<>();
     private UserFileConverter userFileConverter;
+    private FileProtector fileProtector;
 
     /**
      * Construct a new user instance
@@ -37,11 +36,12 @@ public class User {
             this.keyPass = hash(keyPass);
             writeLoginFile();
         }
-        userFileConverter = new UserFileConverter(USER_FILE_NAME);
+        userFileConverter = new BasicUserFileConverter(USER_FILE_NAME);
+        fileProtector = new AesCbcModeFileProtector(keyPass);
         try {
             BufferedReader br = new BufferedReader(new FileReader(USER_FILE_NAME));
             if (userFileConverter.doesFileExist() && br.readLine() != null) {
-                HashMap<String, EncryptedAccount> original = userFileConverter.deserialize();
+                Map<String, EncryptedAccount> original = userFileConverter.deserialize();
                 manager = original == null ? new HashMap<>() : original;
             }
         } catch (IOException e) {
@@ -87,21 +87,12 @@ public class User {
     }
 
     /**
-     * Get the hashed key pass
-     *
-     * @return hashed key pass.
-     */
-    public String getKeyPass() {
-        return keyPass;
-    }
-
-    /**
      * Hashes the user keyPass
      *
      * @param passwordToHash the keyPass that needs to be hashed
      * @return hashPassword the hashed password
      */
-    public String hash(String passwordToHash) {
+    private String hash(String passwordToHash) {
         String hashPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -149,7 +140,7 @@ public class User {
         if (newEntry == null || newEntry.isInvalid()) return false;
         String id = generateID();
         newEntry.setId(id);
-        EncryptedAccount newEncryptedEntry = newEntry.encryptAccount(keyPass);
+        EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
         if (isNewEncryptedEntryDuplicate(newEncryptedEntry)) return false;
         manager.put(id, newEncryptedEntry);
         userFileConverter.serialize(manager);
@@ -158,14 +149,16 @@ public class User {
     }
 
     private boolean isNewEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
-        for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            if (Arrays.equals(account.getValue().getUsername(), newEncryptedEntry.getUsername())
-                    && Arrays.equals(account.getValue().getAppname(), newEncryptedEntry.getAppname())) {
+        for (EncryptedAccount account : manager.values()) {
+            if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
+            && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())) {
                 return true;
             }
         }
         return false;
     }
+
+
 
     private String generateID() {
         Random random = new Random();
@@ -181,17 +174,8 @@ public class User {
      */
     public void displayManager() {
         for (HashMap.Entry<String, EncryptedAccount> account : manager.entrySet()) {
-            System.out.println("Key: " + account.getKey() + " Value: " + account.getValue().decryptAccount(keyPass));
+            System.out.println("Key: " + account.getKey() + " Value: " + fileProtector.decrypt(account.getValue()));
         }
-    }
-
-    /**
-     * This returns the hash map of all keys
-     *
-     * @return hash map of all keys.
-     */
-    public HashMap getHashMap() {
-        return manager;
     }
 
     /**
@@ -202,7 +186,7 @@ public class User {
      */
     public Account getAccount(String userID) {
         if (manager.get(userID) != null) {
-            return manager.get(userID).decryptAccount(keyPass);
+            return fileProtector.decrypt(manager.get(userID));
         }
         return null;
     }
@@ -214,16 +198,29 @@ public class User {
      * @param newEntry is the new account
      */
     public boolean modifyAccount(String id, Account newEntry) {
-        if (manager.containsKey(id)) {
+        if (manager.containsKey(id) && newEntry != null && !newEntry.isInvalid()) {
             newEntry.setId(id);
-            manager.put(id, newEntry.encryptAccount(keyPass));
-            userFileConverter.serialize(manager);
-            return true;
+            EncryptedAccount newEncryptedEntry = fileProtector.encrypt(newEntry);
+            if (!isModifiedEncryptedEntryDuplicate(newEncryptedEntry)) {
+                manager.put(id, fileProtector.encrypt(newEntry));
+                userFileConverter.serialize(manager);
+                return true;
+            }
         } else {
-            System.out.println("This ID does not exist!");
-            return false;
+            System.out.println("Cannot modify this account");
         }
+        return false;
+    }
 
+    private boolean isModifiedEncryptedEntryDuplicate(EncryptedAccount newEncryptedEntry) {
+        for (EncryptedAccount account : manager.values()) {
+            if (account != null && !account.isInvalid() && Arrays.equals(account.getUsername(), newEncryptedEntry.getUsername())
+                    && Arrays.equals(account.getAppname(), newEncryptedEntry.getAppname())
+                    && Arrays.equals(account.getPassword(), newEncryptedEntry.getAppname())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -239,7 +236,7 @@ public class User {
         }
         EncryptedAccount encryptedAcc = manager.remove(id);
         userFileConverter.serialize(manager);
-        return encryptedAcc.decryptAccount(keyPass);
+        return fileProtector.decrypt(encryptedAcc);
     }
 
     /**
@@ -248,5 +245,18 @@ public class User {
     public void deleteAllAccount() {
         manager = new HashMap<>();
         userFileConverter.serialize(manager);
+    }
+
+    /**
+     * Get a list of all plain accounts.
+     *
+     * @return a list of all plain accounts.
+     */
+    public List<Account> getPlainAccounts() {
+        List<Account> accounts = new ArrayList<>(manager.size());
+        for (EncryptedAccount encryptedAccount : manager.values()) {
+            accounts.add(fileProtector.decrypt(encryptedAccount));
+        }
+        return accounts;
     }
 }

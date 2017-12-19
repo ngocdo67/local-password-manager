@@ -1,7 +1,7 @@
 package test;
 
-import main.User;
 import main.Account;
+import main.User;
 
 public class UserTester {
     public static void main(String[] args) {
@@ -19,10 +19,10 @@ public class UserTester {
     private static User testAddAccount(User user) {
         System.out.println("\n---TEST ADD ACCOUNT---\n");
         Account a = new Account("apple", "fruit", "gmail");
-        Account b = new Account("banana", "fruit", "yahoo");
+        Account b = new Account("banana", "fruit", "icloud");
         Account c = new Account("cinnamon", "spice", "amazon");
         Account d = new Account("apple", "ab", "gmail");
-        Account e = new Account("orange", 11, "123");
+        Account e = new Account("orange", 11, "ebay");
         Account f = new Account("grapefruit", 9, "facebook");
 
         System.out.println("Added 5 new accounts");
@@ -36,7 +36,7 @@ public class UserTester {
         return user;
     }
 
-    private static void testGetAccount (User user) {
+    private static void testGetAccount(User user) {
         System.out.println("\n---TEST GET ACCOUNT---\n");
         Account account = user.getAccount("0");
         if (account != null)

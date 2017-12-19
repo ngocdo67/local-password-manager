@@ -44,21 +44,6 @@ public class Account {
     }
 
     /**
-     * Encrypt the account
-     *
-     * @param keyPass key pass for encryption
-     * @return an encrypted account.
-     */
-    public EncryptedAccount encryptAccount(String keyPass) {
-        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
-        byte[] encryptedId = fileProtector.encrypt(id);
-        byte[] encryptedUserName = fileProtector.encrypt(userName);
-        byte[] encryptedPassword = fileProtector.encrypt(password);
-        byte[] encryptedAppName = fileProtector.encrypt(appName);
-        return new EncryptedAccount(encryptedId, encryptedUserName, encryptedPassword, encryptedAppName);
-    }
-
-    /**
      * Constructs a new account instance with generated password.
      *
      * @param userName   username
@@ -122,6 +107,7 @@ public class Account {
     public String getId() {
         return this.id;
     }
+
 
     /**
      * Checks if an account has any null or empty field.

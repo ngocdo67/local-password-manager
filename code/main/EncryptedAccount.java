@@ -1,7 +1,6 @@
 package main;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * This defines an encrypted account for an user.
@@ -32,27 +31,16 @@ public class EncryptedAccount implements Serializable {
     }
 
     /**
-     * Decrypts an account
-     *
-     * @param keyPass key pass used for decryption
-     * @return a decrypted account.
-     */
-    public Account decryptAccount(String keyPass) {
-        FileProtector fileProtector = new AesCbcModeFileProtector(keyPass);
-        String plainId = fileProtector.decrypt(id);
-        String plainUserName = fileProtector.decrypt(userName);
-        String plainPassword = fileProtector.decrypt(password);
-        String plainAppName = fileProtector.decrypt(appName);
-        return new Account(plainId, plainUserName, plainPassword, plainAppName);
-    }
-
-    /**
      * Returns account username.
      *
      * @return userName
      */
     public byte[] getUsername() {
         return this.userName;
+    }
+
+    public byte[] getPassword() {
+        return password;
     }
 
     /**
@@ -71,6 +59,11 @@ public class EncryptedAccount implements Serializable {
      */
     public byte[] getId() {
         return this.id;
+    }
+
+    public boolean isInvalid () {
+        return id == null || id.length == 0 || userName == null || userName.length == 0
+                || password == null || password.length == 0 || appName == null || appName.length == 0;
     }
 
     @Override
